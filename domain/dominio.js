@@ -56,18 +56,18 @@ class Comanda {
     remove(this.platos, plato);
   }
 
-  marcarBebidasListas() {
-    this.bebidasListas = true;
+  marcarBebidasListas(bebidasListas) {
+    this.bebidasListas = bebidasListas;
   }
 
   categoriasListas() {
     return values(Categoria).filter(categoria => this.estaLista(categoria));
   }
 
-  estado(){
-    if(isEmpty(this.categoriasListas())){
+  estado() {
+    if (isEmpty(this.categoriasListas())) {
       return EstadoComanda.INGRESADO
-    } else if(this.pagado){
+    } else if (this.pagado) {
       return EstadoComanda.PAGADO
     } else {
       const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
@@ -120,16 +120,16 @@ class PlatoPedido {
     this.nota = nota
   }
 
-  incrementarCantidad() {
-    this.cantidad++
+  incrementarCantidad(incremento) {
+    this.cantidad += incremento;
   }
 
-  decrementarCantidad() {
-    this.cantidad = max(0, this.cantidad - 1)
+  decrementarCantidad(decremento) {
+    this.cantidad = max(0, this.cantidad - decremento)
   }
 
-  marcarListo() {
-    this.estaListo = true;
+  marcarListo(listo) {
+    this.estaListo = listo;
   }
 }
 
