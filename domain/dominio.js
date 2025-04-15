@@ -60,26 +60,6 @@ class Comanda {
     this.bebidasListas = bebidasListas;
   }
 
-  categoriasListas() {
-    return values(Categoria).filter(categoria => this.estaLista(categoria));
-  }
-
-  estado() {
-    if (isEmpty(this.categoriasListas())) {
-      return EstadoComanda.INGRESADO
-    } else if (this.pagado) {
-      return EstadoComanda.PAGADO
-    } else {
-      const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria)
-    }
-  }
-
-  estaLista(categoria) {
-    return this.platos
-      .filter(plato => plato.esDeCategoria(categoria))
-      .every(plato => plato.estaListo);
-  }
 }
 
 class EstadoComanda {
