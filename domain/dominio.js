@@ -23,7 +23,6 @@ class Categoria {
   nombre;
   orden;
 
-
   constructor(nombre, orden) {
     this.nombre = nombre;
     this.orden = orden;
