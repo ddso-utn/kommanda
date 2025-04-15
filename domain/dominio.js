@@ -19,6 +19,10 @@ class Plato {
   }
 }
 
+enum {
+
+}
+
 class Categoria {
   nombre;
   orden;
@@ -37,7 +41,6 @@ Categoria.BEBIDA = new Categoria("Bebida", 3)
 class Comanda {
   mesa;
   platos;
-  estado;
   bebidasListas;
   pagado;
 
@@ -58,6 +61,24 @@ class Comanda {
 
   marcarBebidasListas(bebidasListas) {
     this.bebidasListas = bebidasListas;
+  }
+
+  todosPlatosListos(categoria){
+    return this.platos
+      .filter(p => p.esDeCategoria(categoria))
+      .every(p => p.estaListo)
+  }
+
+  estado(){
+    if(this.ningunPlatoListo()){
+      return EstadoComanda.INGRESADO //TODO Reescribir
+    } else if(this.todosPlatosListos(EstadoComanda.ENTRADAS_LISTAS.categoria)) {
+      return EstadoComanda.ENTRADAS_LISTAS
+    } else if(this.todosPlatosListos(EstadoComanda.PRINCIPALES_LISTOS.categoria)) {
+      return EstadoComanda.PRINCIPALES_LISTOS
+    } else if(this.todosPlatosListos(EstadoComanda.POSTRES_LISTOS.categoria)) {
+      return EstadoComanda.POSTRES_LISTOS
+    }
   }
 
 }
