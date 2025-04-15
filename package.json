@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "lodash": "^4.17.21"
   }
 }
