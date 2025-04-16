@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  title: Platos y Comandas API
+  version: 1.0.0
+paths:
+  /platos:
+    post:
+      summary: Crear un nuevo plato
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                disponible:
+                  type: boolean
+              required:
+                - disponible
+      responses:
+        '201':
+          description: Plato creado exitosamente
+
+  /platos/{id}:
+    put:
+      summary: Reemplazar un plato por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                disponible:
+                  type: boolean
+              required:
+                - disponible
+      responses:
+        '200':
+          description: Plato actualizado exitosamente
+
+    patch:
+      summary: Actualizar parcialmente un plato por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                disponible:
+                  type: boolean
+              required:
+                - disponible
+      responses:
+        '200':
+          description: Plato actualizado parcialmente
+
+  /comandas:
+    post:
+      summary: Crear una nueva comanda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mesa:
+                  type: integer
+                platos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      idPlato:
+                        type: integer
+                      cantidad:
+                        type: integer
+                      notas:
+                        type: string
+                    required:
+                      - idPlato
+                      - cantidad
+              required:
+                - mesa
+                - platos
+      responses:
+        '201':
+          description: Comanda creada exitosamente

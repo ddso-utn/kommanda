@@ -1,5 +1,6 @@
 import {remove} from "lodash/array";
 import {isEmpty, max, maxBy, values} from "lodash";
+import {sumBy} from "lodash/math";
 
 class Plato {
   nombre;
@@ -17,10 +18,6 @@ class Plato {
   esDeCategoria(categoria) {
     this.categoria = categoria;
   }
-}
-
-enum {
-
 }
 
 class Categoria {
@@ -63,24 +60,30 @@ class Comanda {
     this.bebidasListas = bebidasListas;
   }
 
-  todosPlatosListos(categoria){
-    return this.platos
-      .filter(p => p.esDeCategoria(categoria))
-      .every(p => p.estaListo)
+  categoriasListas() {
+    return values(Categoria).filter(categoria => categoria !== Categoria.BEBIDA && this.estaLista(categoria));
   }
 
-  estado(){
-    if(this.ningunPlatoListo()){
-      return EstadoComanda.INGRESADO //TODO Reescribir
-    } else if(this.todosPlatosListos(EstadoComanda.ENTRADAS_LISTAS.categoria)) {
-      return EstadoComanda.ENTRADAS_LISTAS
-    } else if(this.todosPlatosListos(EstadoComanda.PRINCIPALES_LISTOS.categoria)) {
-      return EstadoComanda.PRINCIPALES_LISTOS
-    } else if(this.todosPlatosListos(EstadoComanda.POSTRES_LISTOS.categoria)) {
-      return EstadoComanda.POSTRES_LISTOS
+  estado() {
+    if (isEmpty(this.categoriasListas())) {
+      return EstadoComanda.INGRESADO
+    } else if (this.pagado) {
+      return EstadoComanda.PAGADO
+    } else {
+      const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
+      return values(EstadoComanda).filter(e => e.categoria == maximaCategoriaLista)
     }
   }
 
+  estaLista(categoria) {
+    return this.platos
+      .filter(plato => plato.esDeCategoria(categoria))
+      .every(plato => plato.estaListo);
+  }
+
+  totalAPagar(){
+    return sumBy(this.platos, p => p.costoFinal())
+  }
 }
 
 class EstadoComanda {
@@ -131,6 +134,10 @@ class PlatoPedido {
 
   marcarListo(listo) {
     this.estaListo = listo;
+  }
+
+  costoFinal() {
+    return this.cantidad * this.plato.precio
   }
 }
 
