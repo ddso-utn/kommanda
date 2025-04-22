@@ -1,7 +1,7 @@
 import bodyParser from "express";
 import {Plato, Menu} from "./domain/dominio.js";
 import {PlatosController} from "./controllers/platosController.js";
-const express = require('express')
+import express from 'express'
 const app = express()
 const port = 3000
 
@@ -84,17 +84,17 @@ app.get('/comandas/:id', (req, res) => {
   }
 })
 
-app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
-  const returns = [{
-    mesa: 1,
-    estado: "INGRESADA",
-    platos: [{
-      idPlato: 12,
-      cantidad: 1,
-      notas: "Sin cebolla"
-    }],
-  }]
-})
+// app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
+//   const returns = [{
+//     mesa: 1,
+//     estado: "INGRESADA",
+//     platos: [{
+//       idPlato: 12,
+//       cantidad: 1,
+//       notas: "Sin cebolla"
+//     }],
+//   }]
+// })
 
 app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
   const body = {

@@ -1,6 +1,6 @@
-import {remove} from "lodash/array";
-import {isEmpty, max, maxBy, values} from "lodash";
-import {sumBy} from "lodash/math";
+import {remove} from "lodash-es";
+import {isEmpty, max, maxBy, values} from "lodash-es";
+import {sumBy} from "lodash-es";
 
 export class Plato {
   nombre;
