@@ -1,6 +1,7 @@
 import {negate, remove} from "lodash-es";
 import {isEmpty, max, maxBy, values} from "lodash-es";
 import {sumBy} from "lodash-es";
+import {PlatoInvalido} from "../excepciones/excepciones.js";
 
 export class Plato {
   id;
@@ -10,7 +11,6 @@ export class Plato {
   estaDisponible;
 
   constructor({nombre, categoria, precio}) {
-    console.log(nombre, categoria, precio);
     this.validarParametros(precio, nombre, categoria);
     this.nombre = nombre;
     this.categoria = categoria;
@@ -20,7 +20,7 @@ export class Plato {
 
   validarParametros(precio, nombre, categoria) {
     if ([precio, nombre, categoria].some(v => !v)) {
-      throw new Error(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
+      throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
     }
   }
 

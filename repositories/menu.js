@@ -1,5 +1,6 @@
 import {omit, remove} from "lodash-es";
 import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
+import {PlatoInexistente} from "../excepciones/excepciones.js";
 
 export const Menu = {
   platos: [],
@@ -16,6 +17,9 @@ export const Menu = {
 
   actualizarPlatoPorId(id, actualizacionesDelPlato){
     const platoAActualizar = this.platos.find(p => p.id === id);
+    if(!platoAActualizar){
+      throw new PlatoInexistente(id)
+    }
     reemplazarValoresNoNulos(platoAActualizar,actualizacionesDelPlato)
     return platoAActualizar;
   },

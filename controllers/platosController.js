@@ -1,5 +1,6 @@
 import {Categoria, Plato} from "../domain/dominio.js";
 import {Menu} from "../repositories/menu.js";
+import {PlatoInexistente, PlatoInvalido} from "../excepciones/excepciones.js";
 
 const comoPlatoAMostrar = (plato) => {
   return {
@@ -38,9 +39,11 @@ export const PlatosController = {
       res.status(201).json(comoPlatoAMostrar(plato))
     } catch(error){
       console.error(error)
-      res.status(400).json({
-        error: error.message,
-      })
+      if(error instanceof PlatoInvalido){
+        res.status(400).json({
+          error: error.message,
+        })
+      }
     }
   },
 
@@ -51,9 +54,15 @@ export const PlatosController = {
       res.status(200).json(comoPlatoAMostrar(platoActualizado))
     } catch(error){
       console.error(error)
-      res.status(400).json({
-        error: error.message,
-      })
+      if(error instanceof PlatoInvalido){
+        res.status(400).json({
+          error: error.message,
+        })
+      } else if(error instanceof PlatoInexistente){
+        res.status(404).json({
+          error: error.message,
+        })
+      }
     }
   },
 
@@ -63,9 +72,15 @@ export const PlatosController = {
       res.status(200).json(comoPlatoAMostrar(plato))
     } catch(error){
       console.error(error)
-      res.status(400).json({
-        error: error.message,
-      })
+      if(error instanceof PlatoInvalido){
+        res.status(400).json({
+          error: error.message,
+        })
+      } else if(error instanceof PlatoInexistente){
+        res.status(404).json({
+          error: error.message,
+        })
+      }
     }
   },
 
