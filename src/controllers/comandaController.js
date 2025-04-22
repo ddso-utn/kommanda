@@ -47,30 +47,26 @@ export const ComandaController = {
     }
   },
 
-  actualizarPlato(req, res){
+  agregarPlatosComanda(req, res){
     try{
-      const plato = new Plato(
-        req.body.nombre,
-        req.body.categoria,
-        req.body.precio
+      const idComanda = parseInt(req.params.id);
+      let comanda = ComandaRepository.obtenerPorId(idComanda);
+      const datosPlato = req.body;
+      const nuevoPlato = new PlatoPedido(
+        Menu.obtenerPlatoPorId(datosPlato.idPlato),
+        datosPlato.cantidad,
+        datosPlato.notas
       )
-      const platoActualizado = Menu.actualizarPlatoPorId(req.params.id, plato)
-      res.status(200).json(platoActualizado)
+      comanda.agregarPlato(nuevoPlato)
+      comanda = ComandaRepository.actualizarComanda(idComanda, comanda)
+      res.status(200).json(aComandaRest(comanda))
     } catch(error){
-      res.status(400).json({
-        error: error.message,
-      })
-    }
-  },
-
-  marcarPlatoDisponible(req, res){
-    try{
-      const plato = Menu.actualizarPlato({estaDisponible: res.disponible})
-      res.status(200).json(plato)
-    } catch(error){
-      res.status(400).json({
-        error: error.message,
-      })
+      console.error(error)
+      if(error instanceof ComandaInvalida){
+        res.status(400).json({
+          error: error.message,
+        })
+      }
     }
   },
 

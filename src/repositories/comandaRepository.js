@@ -41,7 +41,14 @@ export const ComandaRepository = {
       platoId: p.plato.id
     }))
     Object.assign(comandaAActualizar, actualizacionesDeLaComanda)
-    return comandaAActualizar;
+    const comanda = new Comanda(comandaAActualizar.mesa, comandaAActualizar.platos);
+    Object.assign(comanda, comandaAActualizar)
+    comanda.platos = comandaAActualizar.platos.map(p => new PlatoPedido(
+      PlatosRepository.obtenerPlatoPorId(p.platoId),
+      p.cantidad,
+      p.notas
+    ));
+    return comanda;
   },
 
   borrar(comanda){
