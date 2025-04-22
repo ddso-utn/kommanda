@@ -1,27 +1,21 @@
-import {negate, remove} from "lodash-es";
-import {isEmpty, max, maxBy, values} from "lodash-es";
-import {sumBy} from "lodash-es";
+import {remove} from "lodash/array";
+import {isEmpty, max, maxBy, values} from "lodash";
+import {sumBy} from "lodash/math";
 
 export class Plato {
-  id;
   nombre;
   categoria;
   precio;
   estaDisponible;
 
-  constructor({nombre, categoria, precio}) {
-    console.log(nombre, categoria, precio);
-    this.validarParametros(precio, nombre, categoria);
+  constructor(nombre, categoria, precio) {
     this.nombre = nombre;
     this.categoria = categoria;
+    if(!precio){
+      throw new Error("El plato necesita un precio");
+    }
     this.precio = precio;
     this.estaDisponible = true;
-  }
-
-  validarParametros(precio, nombre, categoria) {
-    if ([precio, nombre, categoria].some(v => !v)) {
-      throw new Error(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
-    }
   }
 
   esDeCategoria(categoria) {
@@ -33,23 +27,18 @@ export class Categoria {
   nombre;
   orden;
 
-  static fromString(token){
-    return values(Categoria).find(cat => cat.nombre === token)
-  }
-
   constructor(nombre, orden) {
     this.nombre = nombre;
     this.orden = orden;
   }
 }
 
-Categoria.ENTRADA = new Categoria("ENTRADA", 0)
-Categoria.PRINCIPAL = new Categoria("PRINCIPAL", 1)
-Categoria.POSTRE = new Categoria("POSTRE", 2)
-Categoria.BEBIDA = new Categoria("BEBIDA", 3)
+Categoria.ENTRADA = new Categoria("Entrada", 0)
+Categoria.PRINCIPAL = new Categoria("Principal", 1)
+Categoria.POSTRE = new Categoria("Postre", 2)
+Categoria.BEBIDA = new Categoria("Bebida", 3)
 
 export class Comanda {
-  id;
   mesa;
   platos;
   bebidasListas;
@@ -152,6 +141,14 @@ export class PlatoPedido {
 
   costoFinal() {
     return this.cantidad * this.plato.precio
+  }
+}
+
+export const Menu = {
+  platos: [],
+
+  agregarPlato(plato){
+    this.platos.push(plato);
   }
 }
 

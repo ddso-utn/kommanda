@@ -1,6 +1,7 @@
-import bodyParser from "body-parser";
+import bodyParser from "express";
+import {Plato, Menu} from "./domain/dominio.js";
 import {PlatosController} from "./controllers/platosController.js";
-import express from 'express'
+const express = require('express')
 const app = express()
 const port = 3000
 
@@ -12,11 +13,19 @@ app.get('/', (req, res) => {
 
 app.post('/platos', PlatosController.crearPlato)
 
-app.get('/platos', PlatosController.verPlatos)
+app.put('/platos/:id', (req, res) => {
+  const body = {
+    nombre: "Milanesa con puré de papas",
+    categoria: "PRINCIPAL",
+    precio: 17000
+  }
+})
 
-app.put('/platos/:id', PlatosController.actualizarPlato)
-
-app.patch('/platos/:id', PlatosController.marcarPlatoDisponible)
+app.patch('/platos/:id', (req, res) => {
+  const body = {
+    disponible: false
+  }
+})
 
 app.post('/comandas', (req, res) => {
   const body = {
@@ -75,23 +84,23 @@ app.get('/comandas/:id', (req, res) => {
   }
 })
 
-// app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
-//   const returns = [{
-//     mesa: 1,
-//     estado: "INGRESADA",
-//     platos: [{
-//       idPlato: 12,
-//       cantidad: 1,
-//       notas: "Sin cebolla"
-//     }],
-//   }]
-// })
-//
-// app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
-//   const body = {
-//     estaListo: true,
-//   }
-// })
+app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
+  const returns = [{
+    mesa: 1,
+    estado: "INGRESADA",
+    platos: [{
+      idPlato: 12,
+      cantidad: 1,
+      notas: "Sin cebolla"
+    }],
+  }]
+})
+
+app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
+  const body = {
+    estaListo: true,
+  }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
