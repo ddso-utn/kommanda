@@ -92,9 +92,15 @@ export const ComandaController = {
       const comanda = ComandaRepository.obtenerPorId(idComanda);
       const actualizacionesPlato = req.body;
       const ordenPlato = req.params.ordenPlato;
-      comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
-      comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
-      comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
+      if(actualizacionesPlato.notas) {
+        comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
+      }
+      if(actualizacionesPlato.cantidad){
+        comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
+      }
+      if(actualizacionesPlato.estaListo){
+        comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
+      }
       res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
