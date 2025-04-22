@@ -1,15 +1,17 @@
 {
-  "name": "Kommanda",
+  "name": "kommanda",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": true,
   "dependencies": {
+    "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "lodash": "^4.17.21"
+    "lodash-es": "^4.17.21"
   }
 }

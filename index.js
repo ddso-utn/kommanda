@@ -1,40 +1,97 @@
-const express = require('express')
+import bodyParser from "body-parser";
+import {PlatosController} from "./controllers/platosController.js";
+import express from 'express'
 const app = express()
 const port = 3000
 
-app.post('/platos', (req, res) => {
-  const requestBody = {
-    nombre: "Milanesa con Puré",
-    precio: 10000,
-    categoria: "PRINCIPAL"
-  }
+app.use(bodyParser.json())
 
-  const responseBody = {
-    id: 1,
-    nombre: "Milanesa con Puré",
-    precio: 10000,
-    categoria: "PRINCIPAL"
-  }
-
-  res.status(201).json(responseBody)
+app.get('/', (req, res) => {
+  res.send('Hello World!')
 })
 
-app.put('/platos/:idPlato', (req, res) => {
-  const requestBody = {
-    nombre: "Milanesa con Papas",
-    precio: 14000,
-    categoria: "PRINCIPAL"
-  }
+app.post('/platos', PlatosController.crearPlato)
 
-  const responseBody = {
-    id: 1,
-    nombre: "Milanesa con Papas",
-    precio: 14000,
-    categoria: "PRINCIPAL"
-  }
+app.get('/platos', PlatosController.verPlatos)
 
-  res.status(200).json(responseBody)
+app.put('/platos/:id', PlatosController.actualizarPlato)
+
+app.patch('/platos/:id', PlatosController.marcarPlatoDisponible)
+
+app.post('/comandas', (req, res) => {
+  const body = {
+    mesa: 1,
+    platos: [{
+      idPlato: 12,
+      cantidad: 1,
+      notas: "Sin cebolla"
+    }],
+  }
 })
+
+app.patch('/comandas/:id', (req, res) => {
+  const body = [
+    {
+      idPlato: 22,
+      operacion: "ELIMINAR",
+      cantidad: 2
+    },
+    {
+      idPlato: 2,
+      operacion: "AGREGAR",
+      cantidad: 1
+    }
+  ]
+})
+
+
+app.post('/comandas/:id/platos', (req, res) => {
+  const body = {
+    idPlato: 22,
+    cantidad: 2
+  }
+})
+
+app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
+  const body = {
+    cantidad: 3,
+    notas: "Sin tomate"
+  }
+})
+
+app.delete('/comandas/:id/platos/:ordenPlato', (req, res) => {
+})
+
+app.get('/comandas/:id', (req, res) => {
+  const returns = {
+    mesa: 1,
+    estado: "INGRESADA",
+    bebidasListas: false,
+    platos: [{
+      idPlato: 12,
+      cantidad: 1,
+      notas: "Sin cebolla"
+    }],
+  }
+})
+
+// app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
+//   const returns = [{
+//     mesa: 1,
+//     estado: "INGRESADA",
+//     platos: [{
+//       idPlato: 12,
+//       cantidad: 1,
+//       notas: "Sin cebolla"
+//     }],
+//   }]
+// })
+//
+// app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
+//   const body = {
+//     estaListo: true,
+//   }
+// })
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
