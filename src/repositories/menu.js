@@ -15,8 +15,12 @@ export const Menu = {
     return this.platos;
   },
 
+  obtenerPlatoPorId(id){
+    return this.platos.find(p => p.id === id);
+  },
+
   actualizarPlatoPorId(id, actualizacionesDelPlato){
-    const platoAActualizar = this.platos.find(p => p.id === id);
+    const platoAActualizar = this.obtenerPlatoPorId(id);
     if(!platoAActualizar){
       throw new PlatoInexistente(id)
     }
