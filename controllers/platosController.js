@@ -1,4 +1,5 @@
-import {Menu, Plato} from "../domain/dominio.js";
+import {Plato} from "../domain/dominio.js";
+import {Menu} from "../repositorios/menu.js";
 
 export const PlatosController = {
   crearPlato(req, res){
@@ -12,6 +13,23 @@ export const PlatosController = {
       res.status(201).json(plato)
     } catch(error){
       res.status(400).json({
+        error: error.message,
+      })
+    }
+  },
+
+  verPlato(req, res){
+    try{
+      const idPlato = parseInt(req.params.id)
+      if(isNaN(idPlato)){
+        res.status(400).json({
+          error: "El id debe ser un numero",
+        })
+      }
+      const plato = Menu.obtenerPlato(idPlato)
+      res.status(200).json(plato)
+    } catch(error){
+      res.status(404).json({
         error: error.message,
       })
     }

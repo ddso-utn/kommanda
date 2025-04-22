@@ -1,5 +1,4 @@
 import bodyParser from "express";
-import {Plato, Menu} from "./domain/dominio.js";
 import {PlatosController} from "./controllers/platosController.js";
 import express from 'express'
 const app = express()
@@ -12,6 +11,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/platos', PlatosController.crearPlato)
+
+app.get('/platos/:id', PlatosController.verPlato)
 
 app.put('/platos/:id', (req, res) => {
   const body = {

@@ -144,16 +144,6 @@ export class PlatoPedido {
   }
 }
 
-export const Menu = {
-  platos: [],
-
-  agregarPlato(plato){
-    this.platos.push(plato);
-  }
-}
-
-
-
 
 
 
