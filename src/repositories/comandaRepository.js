@@ -1,4 +1,6 @@
-import {remove} from "lodash-es";
+import {clone, remove} from "lodash-es";
+import {Menu as PlatosRepository} from "./menu.js";
+import {Comanda, PlatoPedido} from "../domain/dominio.js";
 
 export const ComandaRepository = {
   comandas: [],
@@ -20,7 +22,15 @@ export const ComandaRepository = {
   },
 
   obtenerPorId(id){
-    return this.comandas.find(c => c.id === id);
+    const comandaGuardada = this.comandas.find(c => c.id === id);
+    const comanda = new Comanda(comandaGuardada.mesa, comandaGuardada.platos);
+    Object.assign(comanda, comandaGuardada)
+    comanda.platos = comandaGuardada.platos.map(p => new PlatoPedido(
+      PlatosRepository.obtenerPlatoPorId(p.platoId),
+      p.cantidad,
+      p.notas
+    ));
+    return comanda;
   },
 
   actualizarComanda(id, actualizacionesDeLaComanda){

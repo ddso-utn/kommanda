@@ -6,6 +6,7 @@ import {ComandaInvalida} from "../excepciones/comandas.js";
 
 const aComandaRest = (comanda) => {
   return {
+    id: comanda.id,
     mesa: comanda.mesa,
     estado: comanda.estado().nombre,
     bebidasListas: comanda.bebidasListas,
@@ -73,8 +74,8 @@ export const ComandaController = {
     }
   },
 
-  verPlatos(req, res) {
-    res.status(200).json(Menu.listar())
+  verComanda(req, res) {
+    res.status(200).json(aComandaRest(ComandaRepository.obtenerPorId(parseInt(req.params.id))))
   }
 }
 
