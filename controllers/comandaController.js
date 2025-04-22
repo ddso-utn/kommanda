@@ -1,6 +1,6 @@
 import {Menu, Plato} from "../domain/dominio.js";
 
-export const PlatosController = {
+export const ComandaController = {
   crearPlato(req, res){
     try{
       const plato = new Plato(

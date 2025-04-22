@@ -2,41 +2,33 @@ import {Categoria, Plato} from "../domain/dominio.js";
 import {Menu} from "../repositories/menu.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/excepciones.js";
 
-const comoPlatoAMostrar = (plato) => {
+const aPlatoRest = (datosDelPlato) => {
   return {
-    id: plato.id,
-    nombre: plato.nombre,
-    categoria: plato.categoria.nombre,
-    precio: plato.precio,
-    estaDisponible: plato.estaDisponible,
+    id: datosDelPlato.id,
+    nombre: datosDelPlato.nombre,
+    categoria: datosDelPlato.categoria.nombre,
+    precio: datosDelPlato.precio,
+    estaDisponible: datosDelPlato.estaDisponible,
   }
 };
 
-const deParametrosDePlatoCompleto = (parametros) => {
-  return new Plato({
-    nombre: parametros.nombre,
-    categoria: Categoria.fromString(parametros.categoria),
-    precio: parametros.precio,
-  })
-};
-
-const deParametrosActualizaciónParcialDePlato = (parametros) => {
-  //TODO realizar validaciones
+const dePlatoRest = (platoRest) => {
+  //TODO realizar validaciones si corresponde
   return {
-    nombre: parametros.nombre,
-    categoria: parametros.categoria && Categoria.fromString(parametros.categoria),
-    precio: parametros.precio,
-    estaDisponible: parametros.disponible,
+    nombre: platoRest.nombre,
+    categoria: platoRest.categoria && Categoria.fromString(platoRest.categoria),
+    precio: platoRest.precio,
+    estaDisponible: platoRest.disponible,
   }
 };
 
 
 export const PlatosController = {
+
   crearPlato(req, res){
     try{
-      const plato = deParametrosDePlatoCompleto(req.body)
-      Menu.agregarPlato(plato)
-      res.status(201).json(comoPlatoAMostrar(plato))
+      const plato = Menu.agregarPlato(new Plato(dePlatoRest(req.body)))
+      res.status(201).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)
       if(error instanceof PlatoInvalido){
@@ -49,9 +41,9 @@ export const PlatosController = {
 
   actualizarPlato(req, res){
     try{
-      const plato = deParametrosDePlatoCompleto(req.body)
+      const plato = dePlatoRest(req.body)
       const platoActualizado = Menu.actualizarPlatoPorId(parseInt(req.params.id), plato)
-      res.status(200).json(comoPlatoAMostrar(platoActualizado))
+      res.status(200).json(aPlatoRest(platoActualizado))
     } catch(error){
       console.error(error)
       if(error instanceof PlatoInvalido){
@@ -68,8 +60,8 @@ export const PlatosController = {
 
   marcarPlatoDisponible(req, res){
     try{
-      const plato = Menu.actualizarPlatoPorId(parseInt(req.params.id), deParametrosActualizaciónParcialDePlato(req.body))
-      res.status(200).json(comoPlatoAMostrar(plato))
+      const plato = Menu.actualizarPlatoPorId(parseInt(req.params.id), dePlatoRest(req.body))
+      res.status(200).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)
       if(error instanceof PlatoInvalido){
@@ -85,7 +77,7 @@ export const PlatosController = {
   },
 
   verPlatos(req, res) {
-    res.status(200).json(Menu.listar().map(comoPlatoAMostrar))
+    res.status(200).json(Menu.listar().map(aPlatoRest))
   }
 }
 
