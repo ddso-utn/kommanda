@@ -1,5 +1,5 @@
 import bodyParser from "body-parser";
-import {PlatosController} from "./controllers/platosController.js";
+import {PlatosController} from "./src/controllers/platosController.js";
 import express from 'express'
 const app = express()
 const port = 3000

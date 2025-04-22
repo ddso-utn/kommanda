@@ -1,6 +1,6 @@
 import {Categoria, Plato} from "../domain/dominio.js";
 import {Menu} from "../repositories/menu.js";
-import {PlatoInexistente, PlatoInvalido} from "../excepciones/excepciones.js";
+import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
 
 const aPlatoRest = (datosDelPlato) => {
   return {

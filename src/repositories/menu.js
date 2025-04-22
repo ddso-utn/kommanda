@@ -1,6 +1,6 @@
 import {omit, remove} from "lodash-es";
 import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
-import {PlatoInexistente} from "../excepciones/excepciones.js";
+import {PlatoInexistente} from "../excepciones/platos.js";
 
 export const Menu = {
   platos: [],

@@ -1,7 +1,7 @@
 import {negate, remove} from "lodash-es";
 import {isEmpty, max, maxBy, values} from "lodash-es";
 import {sumBy} from "lodash-es";
-import {PlatoInvalido} from "../excepciones/excepciones.js";
+import {PlatoInvalido} from "../excepciones/platos.js";
 
 export class Plato {
   id;
@@ -56,10 +56,17 @@ export class Comanda {
   pagado;
 
   constructor(mesa, platos) {
+    this.validarParametros(mesa)
     this.mesa = mesa;
     this.platos = platos || [];
     this.bebidasListas = false
     this.pagado = false;
+  }
+
+  validarParametros(mesa) {
+    if (!mesa) {
+      throw new ComandaInvalida(`La comanda necesita numero de mesa` );
+    }
   }
 
   agregarPlato(plato) {
