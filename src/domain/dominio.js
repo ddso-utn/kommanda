@@ -25,7 +25,7 @@ export class Plato {
   }
 
   esDeCategoria(categoria) {
-    this.categoria = categoria;
+    this.categoria === categoria;
   }
 }
 
@@ -75,6 +75,14 @@ export class Comanda {
 
   removerPlato(plato) {
     remove(this.platos, plato);
+  }
+
+  agregarNotas(ordenPlato, notas) {
+    this.platos[ordenPlato].agregarNotas(notas);
+  }
+
+  asignarCantidad(ordenPlato, cantidad) {
+    this.platos[ordenPlato].asignarCantidad(cantidad);
   }
 
   marcarBebidasListas(bebidasListas) {
@@ -141,16 +149,12 @@ export class PlatoPedido {
     this.plato.esDeCategoria(categoria);
   }
 
-  agregarNota(nota) {
-    this.nota = nota
+  agregarNotas(notas) {
+    this.notas = notas
   }
 
-  incrementarCantidad(incremento) {
-    this.cantidad += incremento;
-  }
-
-  decrementarCantidad(decremento) {
-    this.cantidad = max(0, this.cantidad - decremento)
+  asignarCantidad(cantdad) {
+    this.cantidad = cantdad;
   }
 
   marcarListo(listo) {

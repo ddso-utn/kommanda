@@ -23,12 +23,7 @@ app.post('/comandas', ComandaController.crearComanda)
 
 app.post('/comandas/:id/platos', ComandaController.agregarPlatosComanda)
 
-app.patch('/comandas/:id/platos/:ordenPlato', (req, res) => {
-  const body = {
-    cantidad: 3,
-    notas: "Sin tomate"
-  }
-})
+app.patch('/comandas/:id/platos/:ordenPlato', ComandaController.actualizarPlatoComanda)
 
 app.get('/comandas/:id', ComandaController.verComanda)
 

@@ -50,7 +50,7 @@ export const ComandaController = {
   agregarPlatosComanda(req, res){
     try{
       const idComanda = parseInt(req.params.id);
-      let comanda = ComandaRepository.obtenerPorId(idComanda);
+      const comanda = ComandaRepository.obtenerPorId(idComanda);
       const datosPlato = req.body;
       const nuevoPlato = new PlatoPedido(
         Menu.obtenerPlatoPorId(datosPlato.idPlato),
@@ -58,8 +58,26 @@ export const ComandaController = {
         datosPlato.notas
       )
       comanda.agregarPlato(nuevoPlato)
-      comanda = ComandaRepository.actualizarComanda(idComanda, comanda)
-      res.status(200).json(aComandaRest(comanda))
+      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
+    } catch(error){
+      console.error(error)
+      if(error instanceof ComandaInvalida){
+        res.status(400).json({
+          error: error.message,
+        })
+      }
+    }
+  },
+
+  actualizarPlatoComanda(req, res){
+    try{
+      const idComanda = parseInt(req.params.id);
+      const comanda = ComandaRepository.obtenerPorId(idComanda);
+      const actualizacionesPlato = req.body;
+      const ordenPlato = req.params.ordenPlato;
+      comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
+      comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
+      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
     } catch(error){
       console.error(error)
       if(error instanceof ComandaInvalida){

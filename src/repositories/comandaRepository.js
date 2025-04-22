@@ -34,7 +34,7 @@ export const ComandaRepository = {
   },
 
   actualizarComanda(id, actualizacionesDeLaComanda){
-    const comandaAActualizar = this.obtenerPorId(id);
+    const comandaAActualizar = this.comandas.find(c => c.id === id);
     actualizacionesDeLaComanda.platos = actualizacionesDeLaComanda.platos.map(p => ({
       ...p,
       plato: undefined,
