@@ -85,6 +85,18 @@ export class Comanda {
     this.platos[ordenPlato].asignarCantidad(cantidad);
   }
 
+  marcarListo(ordenPlato, estaListo) {
+    this.platos[ordenPlato].marcarListo(estaListo);
+  }
+
+  bebidasPendientes() {
+    return !this.bebidasListas;
+  }
+
+  platosPendientes() {
+    return this.platos.some(p => !p.estaListo);
+  }
+
   marcarBebidasListas(bebidasListas) {
     this.bebidasListas = bebidasListas;
   }

@@ -7,8 +7,8 @@ const port = 3000
 
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.get('/healthCheck', (req, res) => {
+  res.status(200).json({mensaje:'Todo marcha bien!'})
 })
 
 app.post('/platos', PlatosController.crearPlato)
@@ -21,24 +21,15 @@ app.patch('/platos/:id', PlatosController.marcarPlatoDisponible)
 
 app.post('/comandas', ComandaController.crearComanda)
 
+app.get('/comandas/:id', ComandaController.verComanda)
+
+app.patch('/comandas/:id', ComandaController.actualizarBebidasComanda)
+
 app.post('/comandas/:id/platos', ComandaController.agregarPlatosComanda)
 
 app.patch('/comandas/:id/platos/:ordenPlato', ComandaController.actualizarPlatoComanda)
 
-app.get('/comandas/:id', ComandaController.verComanda)
-
-// app.get('/comandas/:id?platosPendientes=:platosPendientes&bebidasPendientes=:bebidasPendientes', (req, res) => {
-//   const returns = [{
-//     mesa: 1,
-//     estado: "INGRESADA",
-//     platos: [{
-//       idPlato: 12,
-//       cantidad: 1,
-//       notas: "Sin cebolla"
-//     }],
-//   }]
-// })
-
+app.get('/comandas', ComandaController.buscarComanda)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

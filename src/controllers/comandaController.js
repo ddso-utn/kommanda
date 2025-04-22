@@ -14,7 +14,8 @@ const aComandaRest = (comanda) => {
       nombre: p.plato.nombre,
       cantidad: p.cantidad,
       precio: p.plato.precio,
-      notas: p.notas
+      notas: p.notas,
+      estaListo: p.estaListo,
     }))
   }
 };
@@ -25,8 +26,8 @@ const deComandaRest = (comandaRest) => {
 
 export const ComandaController = {
 
-  crearComanda(req, res){
-    try{
+  crearComanda(req, res) {
+    try {
       const mesa = req.body.mesa;
       const platosPedidos = req.body.platos.map(p =>
         new PlatoPedido(
@@ -37,9 +38,9 @@ export const ComandaController = {
       );
       const comanda = ComandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
       res.status(201).json(aComandaRest(comanda))
-    } catch(error){
+    } catch (error) {
       console.error(error)
-      if(error instanceof ComandaInvalida){
+      if (error instanceof ComandaInvalida) {
         res.status(400).json({
           error: error.message,
         })
@@ -47,8 +48,8 @@ export const ComandaController = {
     }
   },
 
-  agregarPlatosComanda(req, res){
-    try{
+  agregarPlatosComanda(req, res) {
+    try {
       const idComanda = parseInt(req.params.id);
       const comanda = ComandaRepository.obtenerPorId(idComanda);
       const datosPlato = req.body;
@@ -59,9 +60,9 @@ export const ComandaController = {
       )
       comanda.agregarPlato(nuevoPlato)
       res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
-    } catch(error){
+    } catch (error) {
       console.error(error)
-      if(error instanceof ComandaInvalida){
+      if (error instanceof ComandaInvalida) {
         res.status(400).json({
           error: error.message,
         })
@@ -69,23 +70,46 @@ export const ComandaController = {
     }
   },
 
-  actualizarPlatoComanda(req, res){
-    try{
+  actualizarBebidasComanda(req, res) {
+    try {
+      const idComanda = parseInt(req.params.id);
+      const comanda = ComandaRepository.obtenerPorId(idComanda);
+      comanda.marcarBebidasListas(req.body.bebidasListas)
+      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof ComandaInvalida) {
+        res.status(400).json({
+          error: error.message,
+        })
+      }
+    }
+  },
+
+  actualizarPlatoComanda(req, res) {
+    try {
       const idComanda = parseInt(req.params.id);
       const comanda = ComandaRepository.obtenerPorId(idComanda);
       const actualizacionesPlato = req.body;
       const ordenPlato = req.params.ordenPlato;
       comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
       comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
+      comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
       res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
-    } catch(error){
+    } catch (error) {
       console.error(error)
-      if(error instanceof ComandaInvalida){
+      if (error instanceof ComandaInvalida) {
         res.status(400).json({
           error: error.message,
         })
       }
     }
+  },
+
+  buscarComanda(req, res) {
+    const bebidasPendientes = req.query.bebidasPendientes && JSON.parse(req.query.bebidasPendientes);
+    const platosPendientes = req.query.platosPendientes && JSON.parse(req.query.platosPendientes);
+    res.status(200).json(ComandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
   },
 
   verComanda(req, res) {
