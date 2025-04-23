@@ -77,14 +77,7 @@ export class Comanda {
   }
 
   estado() {
-    if (isEmpty(this.categoriasListas())) {
-      return EstadoComanda.INGRESADO
-    } else if (this.pagado) {
-      return EstadoComanda.PAGADO
-    } else {
-      const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria == maximaCategoriaLista)
-    }
+    const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
   }
 
   estaLista(categoria) {

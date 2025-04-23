@@ -1,6 +1,7 @@
 import bodyParser from "express";
 import {PlatosController} from "./controllers/platosController.js";
 import express from 'express'
+import {ComandaController} from "./controllers/comandaController.js";
 const app = express()
 const port = 3000
 
@@ -24,16 +25,7 @@ app.patch('/platos/:id', (req, res) => {
   }
 })
 
-app.post('/comandas', (req, res) => {
-  const body = {
-    mesa: 1,
-    platos: [{
-      idPlato: 12,
-      cantidad: 1,
-      notas: "Sin cebolla"
-    }],
-  }
-})
+app.post('/comandas', ComandaController.crearComanda)
 
 app.patch('/comandas/:id', (req, res) => {
   const body = [
