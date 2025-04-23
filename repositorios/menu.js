@@ -1,3 +1,5 @@
+import {PlatoInexistente} from "../exceptions/platos.js";
+
 export const Menu = {
   platos: [],
 
@@ -14,8 +16,13 @@ export const Menu = {
   obtenerPlato(idPlato) {
     const plato = this.platos.find(p => p.id === idPlato);
     if(!plato){
-      throw new Error(`El plato con id: ${idPlato} no existe`);
+      throw new PlatoInexistente(idPlato);
     }
     return plato;
+  },
+
+  todosLosPlatos() {
+    console.log("LA CATEGORIA ES:", typeof this.platos[0].categoria)
+    return this.platos;
   }
 }

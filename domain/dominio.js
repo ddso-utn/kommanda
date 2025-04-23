@@ -1,6 +1,7 @@
 import {remove} from "lodash-es";
 import {isEmpty, max, maxBy, values} from "lodash-es";
 import {sumBy} from "lodash-es";
+import {PlatoInvalido} from "../exceptions/platos.js";
 
 export class Plato {
   nombre;
@@ -8,14 +9,18 @@ export class Plato {
   precio;
   estaDisponible;
 
-  constructor(nombre, categoria, precio) {
+  constructor({nombre, categoria, precio}) {
+    this.validarParametros(precio, nombre, categoria);
     this.nombre = nombre;
     this.categoria = categoria;
-    if(!precio){
-      throw new Error("El plato necesita un precio");
-    }
     this.precio = precio;
     this.estaDisponible = true;
+  }
+
+  validarParametros(precio, nombre, categoria) {
+    if ([precio, nombre, categoria].some(v => !v)) {
+      throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
+    }
   }
 
   esDeCategoria(categoria) {
@@ -26,6 +31,10 @@ export class Plato {
 export class Categoria {
   nombre;
   orden;
+
+  static fromString(token){
+    return values(Categoria).find(cat => cat.nombre.toUpperCase() === token)
+  }
 
   constructor(nombre, orden) {
     this.nombre = nombre;

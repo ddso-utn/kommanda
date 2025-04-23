@@ -14,13 +14,9 @@ app.post('/platos', PlatosController.crearPlato)
 
 app.get('/platos/:id', PlatosController.verPlato)
 
-app.put('/platos/:id', (req, res) => {
-  const body = {
-    nombre: "Milanesa con puré de papas",
-    categoria: "PRINCIPAL",
-    precio: 17000
-  }
-})
+app.get("/platos", PlatosController.verPlatos)
+
+app.put('/platos/:id', PlatosController.actualizarPlato)
 
 app.patch('/platos/:id', (req, res) => {
   const body = {
