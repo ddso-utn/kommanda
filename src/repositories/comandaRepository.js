@@ -18,7 +18,11 @@ export const ComandaRepository = {
   },
 
   obtenerPorId(id){
-    return this.comandas.find(c => c.id === id);
+    const comanda = this.comandas.find(c => c.id === id);
+    if(!comanda){
+      throw new ComandaInexistente(id)
+    }
+    return comanda;
   },
 
   listarPorFlags(platosPendientes, bebidasPendientes){
@@ -29,11 +33,7 @@ export const ComandaRepository = {
       );
   },
 
-  actualizarComanda(id, comandaActualizada){
-    const comandaAActualizar = this.obtenerPorId(id);
-    if(!comandaAActualizar){
-      throw new ComandaInexistente(id)
-    }
+  guardarComanda(id, comandaActualizada){
     remove(this.comandas, c=> c.id === id)
     this.comandas.push(comandaActualizada);
     return comandaActualizada;

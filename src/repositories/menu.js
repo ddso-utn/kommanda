@@ -16,16 +16,17 @@ export const Menu = {
   },
 
   obtenerPlatoPorId(id){
-    return this.platos.find(p => p.id === id);
-  },
-
-  actualizarPlatoPorId(id, actualizacionesDelPlato){
-    const platoAActualizar = this.obtenerPlatoPorId(id);
-    if(!platoAActualizar){
+    const plato = this.platos.find(p => p.id === id);
+    if(!plato){
       throw new PlatoInexistente(id)
     }
-    reemplazarValoresNoNulos(platoAActualizar,actualizacionesDelPlato)
-    return platoAActualizar;
+    return plato;
+  },
+
+  guardarPlato(platoActualizado){
+    remove(this.platos, p=> p.id === platoActualizado.id)
+    this.platos.push(platoActualizado);
+    return platoActualizado
   },
 
   borrar(plato){
