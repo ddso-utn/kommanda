@@ -41,8 +41,10 @@ export const PlatosController = {
 
   actualizarPlato(req, res){
     try{
-      const plato = dePlatoRest(req.body)
-      const platoActualizado = Menu.actualizarPlatoPorId(parseInt(req.params.id), plato)
+      const plato = Menu.obtenerPlatoPorId(parseInt(req.params.id))
+      const actualizaciones = dePlatoRest(req.body)
+      plato.actualizar(actualizaciones)
+      const platoActualizado = Menu.guardarPlato(plato)
       res.status(200).json(aPlatoRest(platoActualizado))
     } catch(error){
       console.error(error)
@@ -60,7 +62,7 @@ export const PlatosController = {
 
   marcarPlatoDisponible(req, res){
     try{
-      const plato = Menu.actualizarPlatoPorId(parseInt(req.params.id), dePlatoRest(req.body))
+      const plato = Menu.guardarPlato(parseInt(req.params.id), dePlatoRest(req.body))
       res.status(200).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)

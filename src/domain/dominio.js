@@ -2,6 +2,7 @@ import {negate, remove} from "lodash-es";
 import {isEmpty, max, maxBy, values} from "lodash-es";
 import {sumBy} from "lodash-es";
 import {PlatoInvalido} from "../excepciones/platos.js";
+import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
 
 export class Plato {
   id;
@@ -22,6 +23,12 @@ export class Plato {
     if ([precio, nombre, categoria].some(v => !v)) {
       throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
     }
+  }
+
+  actualizar(actualizacionesParciales){
+    //En vez de hacer metodos separados y muchos ifs como en la comanda usamos un poco de magia
+    // con esta funcion definida en utils para hacerlo más conciso
+    reemplazarValoresNoNulos(this,actualizacionesParciales)
   }
 
   esDeCategoria(categoria) {

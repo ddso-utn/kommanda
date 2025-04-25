@@ -3,6 +3,7 @@ import {ComandaRepository} from "../repositories/comandaRepository.js";
 import {Menu} from "../repositories/menu.js";
 import {PlatoInvalido} from "../excepciones/platos.js";
 import {ComandaInvalida} from "../excepciones/comandas.js";
+import {ComandaService} from "../services/comandaService.js";
 
 const aComandaRest = (comanda) => {
   return {
@@ -52,14 +53,14 @@ export const ComandaController = {
     try {
       const idComanda = parseInt(req.params.id);
       const comanda = ComandaRepository.obtenerPorId(idComanda);
-      const datosPlato = req.body;
+      const datosPlato = req.body
       const nuevoPlato = new PlatoPedido(
         Menu.obtenerPlatoPorId(datosPlato.idPlato),
         datosPlato.cantidad,
         datosPlato.notas
       )
       comanda.agregarPlato(nuevoPlato)
-      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
+      res.status(200).json(aComandaRest(ComandaRepository.guardarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida) {
@@ -75,7 +76,7 @@ export const ComandaController = {
       const idComanda = parseInt(req.params.id);
       const comanda = ComandaRepository.obtenerPorId(idComanda);
       comanda.marcarBebidasListas(req.body.bebidasListas)
-      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
+      res.status(200).json(aComandaRest(ComandaRepository.guardarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida) {
@@ -101,7 +102,7 @@ export const ComandaController = {
       if(actualizacionesPlato.estaListo){
         comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
       }
-      res.status(200).json(aComandaRest(ComandaRepository.actualizarComanda(idComanda, comanda)))
+      res.status(200).json(aComandaRest(ComandaRepository.guardarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida) {
