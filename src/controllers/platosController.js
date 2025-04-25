@@ -1,6 +1,7 @@
 import {Categoria, Plato} from "../domain/dominio.js";
 import {Menu} from "../repositories/menu.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
+import {PlatosService} from "../services/platosService.js";
 
 const aPlatoRest = (datosDelPlato) => {
   return {
@@ -27,7 +28,7 @@ export const PlatosController = {
 
   crearPlato(req, res){
     try{
-      const plato = Menu.agregarPlato(new Plato(dePlatoRest(req.body)))
+      const plato = PlatosService.agregarPlato(dePlatoRest(req.body))
       res.status(201).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)
@@ -41,10 +42,9 @@ export const PlatosController = {
 
   actualizarPlato(req, res){
     try{
-      const plato = Menu.obtenerPlatoPorId(parseInt(req.params.id))
+      const platoId = parseInt(req.params.id);
       const actualizaciones = dePlatoRest(req.body)
-      plato.actualizar(actualizaciones)
-      const platoActualizado = Menu.guardarPlato(plato)
+      const platoActualizado = PlatosService.actualizarPlato(platoId, actualizaciones)
       res.status(200).json(aPlatoRest(platoActualizado))
     } catch(error){
       console.error(error)

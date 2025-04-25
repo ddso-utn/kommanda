@@ -26,8 +26,6 @@ export class Plato {
   }
 
   actualizar(actualizacionesParciales){
-    //En vez de hacer metodos separados y muchos ifs como en la comanda usamos un poco de magia
-    // con esta funcion definida en utils para hacerlo más conciso
     reemplazarValoresNoNulos(this,actualizacionesParciales)
   }
 
