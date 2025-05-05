@@ -1,8 +1,9 @@
-import {omit, remove} from "lodash-es";
-import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
+import {remove} from "lodash-es";
 import {PlatoInexistente} from "../excepciones/platos.js";
+import {DB_CLIENT} from "../../index.js";
 
 export const Menu = {
+  COLLECTION_NAME: "menu",
   platos: [],
 
   agregarPlato(plato){

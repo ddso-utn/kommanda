@@ -1,5 +1,4 @@
 import bodyParser from "body-parser";
-import express from 'express'
 import {configureRoutes} from "./routes.js";
 
 export const startServer = (app, port) => {
