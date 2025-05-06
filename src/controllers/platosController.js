@@ -83,8 +83,8 @@ export class PlatosController {
     }
   }
 
-  verPlatos(req, res) {
-    res.status(200).json(this.menu.listar().map(aPlatoRest))
+  async verPlatos(req, res) {
+    res.status(200).json((await this.menu.listar()).map(aPlatoRest))
   }
 }
 

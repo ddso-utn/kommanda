@@ -1,5 +1,6 @@
 import {remove} from "lodash-es";
 import {PlatoInexistente} from "../excepciones/platos.js";
+import {Categoria, Plato} from "../domain/dominio.js";
 
 export class Menu {
   collection
@@ -9,23 +10,41 @@ export class Menu {
     this.collection = db.collection("platos");
   }
 
-  toPlatoDB(plato){
+  aPlatoDB(plato){
+    delete plato.id;
     return {
       ...plato,
       categoria: plato.categoria.nombre,
     }
   }
 
+  dePlatoDB(platoDB){
+    const plato = new Plato();
+    Object.assign(plato, {
+      id: platoDB._id.toString(),
+      nombre: platoDB.nombre,
+      categoria: Categoria.fromString(platoDB.categoria),
+      precio: platoDB.precio,
+      estaDisponible: platoDB.estaDisponible,
+    });
+    return plato;
+  }
+
   async agregarPlato(plato){
-    const result = await this.collection.insertOne(this.toPlatoDB(plato));
+    const result = await this.collection.insertOne(this.aPlatoDB(plato));
     return {
       ...plato,
       id: result.insertedId.toString(),
     }
   }
 
-  listar(){
-    return this.platos;
+  async listar(){
+    const cursor = await this.collection.find()
+    const platos = [];
+    for await(const doc of cursor){
+      platos.push(this.dePlatoDB(doc))
+    }
+    return platos;
   }
 
   obtenerPlatoPorId(id){

@@ -11,7 +11,11 @@ export class Plato {
   precio;
   estaDisponible;
 
-  constructor({nombre, categoria, precio}) {
+  constructor(args) {
+    if(!args){
+      return;
+    }
+    const {nombre, categoria, precio} = args
     this.validarParametros(precio, nombre, categoria);
     this.nombre = nombre;
     this.categoria = categoria;
