@@ -1,11 +1,61 @@
 import {isUndefined, remove} from "lodash-es";
+import {ComandaInexistente} from "../excepciones/comandas.js";
+import {Categoria, Comanda, Plato} from "../domain/dominio.js";
+import {ObjectId} from "mongodb";
 
 export class ComandaRepository {
+  collection
   comandas = []
 
-  agregarComanda(comanda){
-    comanda.id = this.obtenerSiguienteId()
-    this.comandas.push(comanda);
+  constructor(db) {
+    this.collection = this.collection = db.collection("comandas");;
+  }
+
+  aComandaDB(comanda){
+    const comandaDB = {
+      ...comanda,
+      platos: comanda.platos.map(this.aPlatoPedidoDB.bind(this)),
+    };
+    delete comandaDB.id;
+    return comandaDB
+  }
+
+  aPlatoPedidoDB(platoPedido){
+    const platoPedidoDB = {
+      ...platoPedido,
+      idPlato: new ObjectId(platoPedido.plato.id),
+    };
+    delete platoPedidoDB.plato;
+    return platoPedidoDB
+  }
+
+  // deComandaDB(platoDB){
+  //   const comanda = new Comanda();
+  //   Object.assign(comanda, {
+  //     id: platoDB._id.toString(),
+  //     mesa: platoDB.mesa,
+  //     platos: platoDB.platos.map(this.dePlatoPedidoDB.bind(this)),
+  //     bebidasListas: platoDB.bebidasListas,
+  //     pagado: platoDB.pagado
+  //   })
+  //   return plato;
+  // }
+  //
+  // deComandaDB(platoDB){
+  //   const comanda = new Comanda();
+  //   Object.assign(comanda, {
+  //     id: platoDB._id.toString(),
+  //     mesa: platoDB.mesa,
+  //     platos: platoDB.platos.map(this.dePlatoPedidoDB.bind(this)),
+  //     bebidasListas: platoDB.bebidasListas,
+  //     pagado: platoDB.pagado
+  //   })
+  //   return plato;
+  // }
+
+  async agregarComanda(comanda){
+    const result = await this.collection.insertOne(this.aComandaDB(comanda));
+    comanda.id = result.insertedId;
     return comanda
   }
 

@@ -1,11 +1,8 @@
-import {remove} from "lodash-es";
-import {PlatoInexistente} from "../excepciones/platos.js";
 import {Categoria, Plato} from "../domain/dominio.js";
 import {ObjectId} from "mongodb";
 
 export class Menu {
   collection
-  platos = []
 
   constructor(db) {
     this.collection = db.collection("platos");
@@ -62,13 +59,5 @@ export class Menu {
       }
     );
     return platoActualizado
-  }
-
-  borrar(plato){
-    remove(this.platos, p => p.nombre === plato.nombre);
-  }
-
-  obtenerSiguienteId() {//TODO en una DB real no es necesario
-    return (this.platos[this.platos.length - 1]?.id || 0) + 1;
   }
 }

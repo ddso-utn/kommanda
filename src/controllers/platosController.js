@@ -65,9 +65,9 @@ export class PlatosController {
     }
   }
 
-  marcarPlatoDisponible(req, res){
+  async marcarPlatoDisponible(req, res){
     try{
-      const plato = this.menu.guardarPlato(parseInt(req.params.id), dePlatoRest(req.body))
+      const plato = await this.menu.guardarPlato(req.params.id, dePlatoRest(req.body))
       res.status(200).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)

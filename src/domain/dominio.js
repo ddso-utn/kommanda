@@ -34,7 +34,7 @@ export class Plato {
   }
 
   esDeCategoria(categoria) {
-    this.categoria === categoria;
+    return this.categoria === categoria;
   }
 }
 
@@ -65,6 +65,9 @@ export class Comanda {
   pagado;
 
   constructor(mesa, platos) {
+    if(!mesa && !platos){
+      return;
+    }
     this.validarParametros(mesa)
     this.mesa = mesa;
     this.platos = platos || [];
@@ -121,14 +124,14 @@ export class Comanda {
       return EstadoComanda.PAGADO
     } else {
       const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria == maximaCategoriaLista)
+      return values(EstadoComanda).find(e => e.categoria === maximaCategoriaLista)
     }
   }
 
   estaLista(categoria) {
-    return this.platos
-      .filter(plato => plato.esDeCategoria(categoria))
-      .every(plato => plato.estaListo);
+    const platosCategoria = this.platos
+      .filter(plato => plato.esDeCategoria(categoria));
+    return !isEmpty(platosCategoria) && platosCategoria.every(plato => plato.estaListo);
   }
 
   totalAPagar(){
@@ -167,7 +170,7 @@ export class PlatoPedido {
   }
 
   esDeCategoria(categoria) {
-    this.plato.esDeCategoria(categoria);
+    return this.plato.esDeCategoria(categoria);
   }
 
   agregarNotas(notas) {

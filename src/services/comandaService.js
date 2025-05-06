@@ -10,15 +10,15 @@ export class ComandaService {
     this.menu = menu;
   }
 
-  crearComanda(mesa, platos) {
-    const platosPedidos = platos.map(p =>
+  async crearComanda(mesa, platos) {
+    const platosPedidos = await Promise.all(platos.map(async p =>
       new PlatoPedido(
-        this.menu.obtenerPlatoPorId(p.idPlato),
+        await this.menu.obtenerPlatoPorId(p.idPlato),
         p.cantidad,
         p.notas
       )
-    );
-    return this.comandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
+    ));
+    return await this.comandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
   }
 
   agregarPlatoComanda(idComanda, datosPlato) {
