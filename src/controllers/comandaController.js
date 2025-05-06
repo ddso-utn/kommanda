@@ -13,7 +13,8 @@ const aComandaRest = (comanda) => {
       precio: p.plato.precio,
       notas: p.notas,
       estaListo: p.estaListo,
-    }))
+    })),
+    totalAPagar: comanda.totalAPagar()
   }
 };
 

@@ -13,7 +13,7 @@ export class ComandaRepository {
     this.menu = menu
   }
 
-  aComandaDB(comanda){
+  aComandaDB(comanda) {
     const comandaDB = {
       ...comanda,
       platos: comanda.platos.map(this.aPlatoPedidoDB.bind(this)),
@@ -22,7 +22,7 @@ export class ComandaRepository {
     return comandaDB
   }
 
-  aPlatoPedidoDB(platoPedido){
+  aPlatoPedidoDB(platoPedido) {
     const platoPedidoDB = {
       ...platoPedido,
       idPlato: new ObjectId(platoPedido.plato.id),
@@ -31,7 +31,7 @@ export class ComandaRepository {
     return platoPedidoDB
   }
 
-  async deComandaDB(comandaDB){
+  async deComandaDB(comandaDB) {
     const comanda = new Comanda();
     Object.assign(comanda, {
       id: comandaDB._id.toString(),
@@ -43,7 +43,7 @@ export class ComandaRepository {
     return comanda;
   }
 
-  async dePlatoPedidoDB(platoPedidoDB, platoDB){
+  async dePlatoPedidoDB(platoPedidoDB, platoDB) {
     const platoPedido = new PlatoPedido();
     Object.assign(platoPedido, {
       plato: platoDB || await this.menu.obtenerPlatoPorId(platoPedidoDB.idPlato.toString()),
@@ -54,29 +54,29 @@ export class ComandaRepository {
     return platoPedido;
   }
 
-  async agregarComanda(comanda){
+  async agregarComanda(comanda) {
     const result = await this.collection.insertOne(this.aComandaDB(comanda));
     comanda.id = result.insertedId;
     return comanda
   }
 
-  async obtenerPorId(id){
+  async obtenerPorId(id) {
     const comanda = await this.collection.findOne({_id: new ObjectId(id)});
-    if(!comanda){
+    if (!comanda) {
       throw new ComandaInexistente(id)
     }
     return await this.deComandaDB(comanda)
   }
 
-  async listarPorFlags(platosPendientes, bebidasPendientes){
+  async listarPorFlags(platosPendientes, bebidasPendientes) {
     const pipeline = [
-      {
+      ...(!isUndefined(bebidasPendientes) ? [{
         $match: {
-          _id: {
-            $eq: new ObjectId("68198cb12ca5df7ba251b71e"),
+          bebidasListas: {
+            $eq: !bebidasPendientes,
           },
         },
-      },
+      }] : []),
       {
         $lookup: {
           from: "platos",
@@ -87,16 +87,30 @@ export class ComandaRepository {
       }]
     const cursor = this.collection.aggregate(pipeline)
     const comandas = [];
-    for await(const doc of cursor){
-      console.log("AGG",doc)
+    for await(const doc of cursor) {
       const comanda = new Comanda();
       Object.assign(comanda, {
         id: doc._id.toString(),
         mesa: doc.mesa,
-        platos: await Promise.all(doc.platos.map(async platoPedidoDB => {
-          const platoDB = this.menu.dePlatoDB(doc.plato_mappings.find(pm => pm._id.equals(platoPedidoDB.idPlato)))
-          return await this.dePlatoPedidoDB(platoPedidoDB, platoDB)
-        })),
+        platos: doc.platos.map(platoPedidoDB => {
+          const platoDB = doc.plato_mappings.find(pm => pm._id.equals(platoPedidoDB.idPlato))
+          const plato = new Plato();
+          Object.assign(plato, {
+            id: platoDB._id.toString(),
+            nombre: platoDB.nombre,
+            categoria: Categoria.fromString(platoDB.categoria),
+            precio: platoDB.precio,
+            estaDisponible: platoDB.estaDisponible,
+          });
+          const platoPedido = new PlatoPedido();
+          Object.assign(platoPedido, {
+            plato,
+            cantidad: platoPedidoDB.cantidad,
+            notas: platoPedidoDB.notas,
+            estaListo: platoPedidoDB.estaListo
+          })
+          return platoPedido;
+        }),
         bebidasListas: doc.bebidasListas,
         pagado: doc.pagado
       })
@@ -105,8 +119,8 @@ export class ComandaRepository {
     return comandas;
   }
 
-  guardarComanda(id, comandaActualizada){
-    remove(this.comandas, c=> c.id === id)
+  guardarComanda(id, comandaActualizada) {
+    remove(this.comandas, c => c.id === id)
     this.comandas.push(comandaActualizada);
     return comandaActualizada;
   }
