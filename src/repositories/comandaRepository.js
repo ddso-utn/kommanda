@@ -1,14 +1,16 @@
 import {isUndefined, remove} from "lodash-es";
 import {ComandaInexistente} from "../excepciones/comandas.js";
-import {Categoria, Comanda, Plato} from "../domain/dominio.js";
+import {Categoria, Comanda, Plato, PlatoPedido} from "../domain/dominio.js";
 import {ObjectId} from "mongodb";
 
 export class ComandaRepository {
   collection
+  menu
   comandas = []
 
-  constructor(db) {
-    this.collection = this.collection = db.collection("comandas");;
+  constructor(db, menu) {
+    this.collection = this.collection = db.collection("comandas");
+    this.menu = menu
   }
 
   aComandaDB(comanda){
@@ -29,29 +31,28 @@ export class ComandaRepository {
     return platoPedidoDB
   }
 
-  // deComandaDB(platoDB){
-  //   const comanda = new Comanda();
-  //   Object.assign(comanda, {
-  //     id: platoDB._id.toString(),
-  //     mesa: platoDB.mesa,
-  //     platos: platoDB.platos.map(this.dePlatoPedidoDB.bind(this)),
-  //     bebidasListas: platoDB.bebidasListas,
-  //     pagado: platoDB.pagado
-  //   })
-  //   return plato;
-  // }
-  //
-  // deComandaDB(platoDB){
-  //   const comanda = new Comanda();
-  //   Object.assign(comanda, {
-  //     id: platoDB._id.toString(),
-  //     mesa: platoDB.mesa,
-  //     platos: platoDB.platos.map(this.dePlatoPedidoDB.bind(this)),
-  //     bebidasListas: platoDB.bebidasListas,
-  //     pagado: platoDB.pagado
-  //   })
-  //   return plato;
-  // }
+  async deComandaDB(comandaDB){
+    const comanda = new Comanda();
+    Object.assign(comanda, {
+      id: comandaDB._id.toString(),
+      mesa: comandaDB.mesa,
+      platos: await Promise.all(comandaDB.platos.map(this.dePlatoPedidoDB.bind(this))),
+      bebidasListas: comandaDB.bebidasListas,
+      pagado: comandaDB.pagado
+    })
+    return comanda;
+  }
+
+  async dePlatoPedidoDB(platoPedidoDB){
+    const platoPedido = new PlatoPedido();
+    Object.assign(platoPedido, {
+      plato: await this.menu.obtenerPlatoPorId(platoPedidoDB.idPlato.toString()),
+      cantidad: platoPedidoDB.cantidad,
+      notas: platoPedidoDB.notas,
+      estaListo: platoPedidoDB.estaListo
+    })
+    return platoPedido;
+  }
 
   async agregarComanda(comanda){
     const result = await this.collection.insertOne(this.aComandaDB(comanda));
@@ -63,12 +64,12 @@ export class ComandaRepository {
     return this.comandas;
   }
 
-  obtenerPorId(id){
-    const comanda = this.comandas.find(c => c.id === id);
+  async obtenerPorId(id){
+    const comanda = await this.collection.findOne({_id: new ObjectId(id)});
     if(!comanda){
       throw new ComandaInexistente(id)
     }
-    return comanda;
+    return await this.deComandaDB(comanda)
   }
 
   listarPorFlags(platosPendientes, bebidasPendientes){
@@ -85,11 +86,4 @@ export class ComandaRepository {
     return comandaActualizada;
   }
 
-  borrar(comanda){
-    remove(this.comandas, c => c.nombre === comanda.nombre);
-  }
-
-  obtenerSiguienteId() {//TODO en una DB real no es necesario
-    return (this.comandas[this.comandas.length - 1]?.id || 0) + 1;
-  }
 }

@@ -94,8 +94,8 @@ export class ComandaController {
     res.status(200).json(this.comandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
   }
 
-  verComanda(req, res) {
-    res.status(200).json(aComandaRest(this.comandaRepository.obtenerPorId(parseInt(req.params.id))))
+  async verComanda(req, res) {
+    res.status(200).json(aComandaRest(await this.comandaRepository.obtenerPorId(req.params.id)))
   }
 }
 

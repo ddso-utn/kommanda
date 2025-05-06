@@ -163,6 +163,9 @@ export class PlatoPedido {
   estaListo;
 
   constructor(plato, cantidad, notas) {
+    if([plato, cantidad, notas].every(v => !v)){
+      return;
+    }
     this.plato = plato;
     this.cantidad = cantidad;
     this.notas = notas;
