@@ -1,9 +1,5 @@
-import {Categoria, Comanda, Plato, PlatoPedido} from "../domain/dominio.js";
-import {ComandaRepository} from "../repositories/comandaRepository.js";
-import {Menu} from "../repositories/menu.js";
-import {PlatoInvalido} from "../excepciones/platos.js";
 import {ComandaInvalida} from "../excepciones/comandas.js";
-import {ComandaService} from "../services/comandaService.js";
+import * as console from "node:console";
 
 const aComandaRest = (comanda) => {
   return {
@@ -21,13 +17,20 @@ const aComandaRest = (comanda) => {
   }
 };
 
-export const ComandaController = {
+export class ComandaController {
+  comandaService
+  comandaRepository
+
+  constructor(comandaService, comandaRepository) {
+    this.comandaService = comandaService;
+    this.comandaRepository = comandaRepository;
+  }
 
   crearComanda(req, res) {
     try {
       const mesa = req.body.mesa;
       const platos = req.body.platos;
-      const comanda = ComandaService.crearComanda(mesa, platos)
+      const comanda = this.comandaService.crearComanda(mesa, platos)
       res.status(201).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)
@@ -37,13 +40,13 @@ export const ComandaController = {
         })
       }
     }
-  },
+  }
 
   agregarPlatosComanda(req, res) {
     try {
       const idComanda = parseInt(req.params.id);
-      const comanda = ComandaService.agregarPlatoComanda(idComanda, req.body);
-      res.status(200).json(aComandaRest(ComandaRepository.guardarComanda(idComanda, comanda)))
+      const comanda = this.comandaService.agregarPlatoComanda(idComanda, req.body);
+      res.status(200).json(aComandaRest(this.comandaRepository.guardarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida) {
@@ -52,13 +55,13 @@ export const ComandaController = {
         })
       }
     }
-  },
+  }
 
   actualizarBebidasComanda(req, res) {
     try {
       const idComanda = parseInt(req.params.id);
-      const comanda = ComandaService.actualizarBebidasComanda(idComanda)
-      res.status(200).json(aComandaRest(ComandaRepository.guardarComanda(idComanda, comanda)))
+      const comanda = this.comandaService.actualizarBebidasComanda(idComanda)
+      res.status(200).json(aComandaRest(this.comandaRepository.guardarComanda(idComanda, comanda)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida) {
@@ -67,13 +70,13 @@ export const ComandaController = {
         })
       }
     }
-  },
+  }
 
   actualizarPlatoComanda(req, res) {
     try {
       const idComanda = parseInt(req.params.id);
       const actualizacionesPlato = req.body;
-      const comanda = ComandaService.actualizarPlatoComanda(idComanda, actualizacionesPlato);
+      const comanda = this.comandaService.actualizarPlatoComanda(idComanda, actualizacionesPlato);
       res.status(200).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)
@@ -83,16 +86,16 @@ export const ComandaController = {
         })
       }
     }
-  },
+  }
 
   buscarComanda(req, res) {
     const bebidasPendientes = req.query.bebidasPendientes && JSON.parse(req.query.bebidasPendientes);
     const platosPendientes = req.query.platosPendientes && JSON.parse(req.query.platosPendientes);
-    res.status(200).json(ComandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
-  },
+    res.status(200).json(this.comandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
+  }
 
   verComanda(req, res) {
-    res.status(200).json(aComandaRest(ComandaRepository.obtenerPorId(parseInt(req.params.id))))
+    res.status(200).json(aComandaRest(this.comandaRepository.obtenerPorId(parseInt(req.params.id))))
   }
 }
 

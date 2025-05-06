@@ -1,7 +1,5 @@
-import {Categoria, Plato} from "../domain/dominio.js";
-import {Menu} from "../repositories/menu.js";
+import {Categoria} from "../domain/dominio.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
-import {PlatosService} from "../services/platosService.js";
 
 const aPlatoRest = (datosDelPlato) => {
   return {
@@ -24,11 +22,18 @@ const dePlatoRest = (platoRest) => {
 };
 
 
-export const PlatosController = {
+export class PlatosController {
+  platosService
+  menu
+
+  constructor(platosService, menu) {
+    this.platosService = platosService;
+    this.menu = menu;
+  }
 
   crearPlato(req, res){
     try{
-      const plato = PlatosService.agregarPlato(dePlatoRest(req.body))
+      const plato = this.platosService.agregarPlato(dePlatoRest(req.body))
       res.status(201).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)
@@ -38,13 +43,13 @@ export const PlatosController = {
         })
       }
     }
-  },
+  }
 
   actualizarPlato(req, res){
     try{
       const platoId = parseInt(req.params.id);
       const actualizaciones = dePlatoRest(req.body)
-      const platoActualizado = PlatosService.actualizarPlato(platoId, actualizaciones)
+      const platoActualizado = this.platosService.actualizarPlato(platoId, actualizaciones)
       res.status(200).json(aPlatoRest(platoActualizado))
     } catch(error){
       console.error(error)
@@ -58,11 +63,11 @@ export const PlatosController = {
         })
       }
     }
-  },
+  }
 
   marcarPlatoDisponible(req, res){
     try{
-      const plato = Menu.guardarPlato(parseInt(req.params.id), dePlatoRest(req.body))
+      const plato = this.menu.guardarPlato(parseInt(req.params.id), dePlatoRest(req.body))
       res.status(200).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)
@@ -76,10 +81,10 @@ export const PlatosController = {
         })
       }
     }
-  },
+  }
 
   verPlatos(req, res) {
-    res.status(200).json(Menu.listar().map(aPlatoRest))
+    res.status(200).json(this.menu.listar().map(aPlatoRest))
   }
 }
 

@@ -1,16 +1,19 @@
-import {ComandaRepository} from "../repositories/comandaRepository.js";
-import {Comanda, Plato, PlatoPedido} from "../domain/dominio.js";
-import {Menu} from "../repositories/menu.js";
+import {Plato} from "../domain/dominio.js";
 
-export const PlatosService = {
+export class PlatosService {
+  menu
+
+  constructor(menu) {
+    this.menu = menu;
+  }
 
   agregarPlato(datosPlato){
-    return Menu.agregarPlato(new Plato(datosPlato))
-  },
+    return this.menu.agregarPlato(new Plato(datosPlato))
+  }
 
   actualizarPlato(platoId, actualizaciones) {
-    const plato = Menu.obtenerPlatoPorId(platoId)
+    const plato = this.menu.obtenerPlatoPorId(platoId)
     plato.actualizar(actualizaciones)
-    return  Menu.guardarPlato(plato)
+    return this.menu.guardarPlato(plato)
   }
 }
