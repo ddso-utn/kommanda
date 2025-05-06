@@ -31,9 +31,9 @@ export class PlatosController {
     this.menu = menu;
   }
 
-  crearPlato(req, res){
+  async crearPlato(req, res){
     try{
-      const plato = this.platosService.agregarPlato(dePlatoRest(req.body))
+      const plato = await this.platosService.agregarPlato(dePlatoRest(req.body))
       res.status(201).json(aPlatoRest(plato))
     } catch(error){
       console.error(error)

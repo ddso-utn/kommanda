@@ -2,17 +2,26 @@ import {remove} from "lodash-es";
 import {PlatoInexistente} from "../excepciones/platos.js";
 
 export class Menu {
-  db
+  collection
   platos = []
 
   constructor(db) {
-    this.db = db;
+    this.collection = db.collection("platos");
   }
 
-  agregarPlato(plato){
-    plato.id = this.obtenerSiguienteId()
-    this.platos.push(plato);
-    return plato
+  toPlatoDB(plato){
+    return {
+      ...plato,
+      categoria: plato.categoria.nombre,
+    }
+  }
+
+  async agregarPlato(plato){
+    const result = await this.collection.insertOne(this.toPlatoDB(plato));
+    return {
+      ...plato,
+      id: result.insertedId.toString(),
+    }
   }
 
   listar(){
