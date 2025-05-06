@@ -12,11 +12,12 @@ export class Menu {
   }
 
   aPlatoDB(plato){
-    delete plato.id;
-    return {
+    const platoDB = {
       ...plato,
       categoria: plato.categoria.nombre,
-    }
+    };
+    delete platoDB.id;
+    return platoDB
   }
 
   dePlatoDB(platoDB){
@@ -53,9 +54,13 @@ export class Menu {
     return this.dePlatoDB(plato)
   }
 
-  guardarPlato(platoActualizado){
-    remove(this.platos, p=> p.id === platoActualizado.id)
-    this.platos.push(platoActualizado);
+  async guardarPlato(platoActualizado){
+    await this.collection.updateOne(
+      {_id: new ObjectId(platoActualizado.id)},
+      {
+        $set: this.aPlatoDB(platoActualizado),
+      }
+    );
     return platoActualizado
   }
 

@@ -45,11 +45,11 @@ export class PlatosController {
     }
   }
 
-  actualizarPlato(req, res){
+  async actualizarPlato(req, res){
     try{
-      const platoId = parseInt(req.params.id);
+      const platoId = req.params.id;
       const actualizaciones = dePlatoRest(req.body)
-      const platoActualizado = this.platosService.actualizarPlato(platoId, actualizaciones)
+      const platoActualizado = await this.platosService.actualizarPlato(platoId, actualizaciones)
       res.status(200).json(aPlatoRest(platoActualizado))
     } catch(error){
       console.error(error)

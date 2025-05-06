@@ -11,10 +11,10 @@ export class PlatosService {
     return this.menu.agregarPlato(new Plato(datosPlato))
   }
 
-  actualizarPlato(platoId, actualizaciones) {
-    const plato = this.menu.obtenerPlatoPorId(platoId)
+  async actualizarPlato(platoId, actualizaciones) {
+    const plato = await this.menu.obtenerPlatoPorId(platoId)
     plato.actualizar(actualizaciones)
-    return this.menu.guardarPlato(plato)
+    return await this.menu.guardarPlato(plato)
   }
 
 }
