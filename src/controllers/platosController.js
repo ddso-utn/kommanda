@@ -86,5 +86,11 @@ export class PlatosController {
   async verPlatos(req, res) {
     res.status(200).json((await this.menu.listar()).map(aPlatoRest))
   }
+
+  async verPlato(req, res) {
+    const platoId = req.params.id;
+    const plato = await this.menu.obtenerPlatoPorId(platoId);
+    res.status(200).json(aPlatoRest(plato))
+  }
 }
 

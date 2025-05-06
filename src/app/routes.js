@@ -2,6 +2,7 @@
 export const configureRoutes = (app, {platosController, comandaController}) => {
   app.post('/platos', platosController.crearPlato.bind(platosController))
   app.get('/platos', platosController.verPlatos.bind(platosController))
+  app.get('/platos/:id', platosController.verPlato.bind(platosController))
   app.put('/platos/:id', platosController.actualizarPlato.bind(platosController))
   app.patch('/platos/:id', platosController.marcarPlatoDisponible.bind(platosController))
   app.post('/comandas', comandaController.crearComanda.bind(comandaController))

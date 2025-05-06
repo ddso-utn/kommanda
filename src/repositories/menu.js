@@ -1,6 +1,7 @@
 import {remove} from "lodash-es";
 import {PlatoInexistente} from "../excepciones/platos.js";
 import {Categoria, Plato} from "../domain/dominio.js";
+import {ObjectId} from "mongodb";
 
 export class Menu {
   collection
@@ -47,12 +48,9 @@ export class Menu {
     return platos;
   }
 
-  obtenerPlatoPorId(id){
-    const plato = this.platos.find(p => p.id === id);
-    if(!plato){
-      throw new PlatoInexistente(id)
-    }
-    return plato;
+  async obtenerPlatoPorId(id){
+    const plato = await this.collection.findOne({_id: new ObjectId(id)});
+    return this.dePlatoDB(plato)
   }
 
   guardarPlato(platoActualizado){

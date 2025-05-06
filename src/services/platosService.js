@@ -16,4 +16,5 @@ export class PlatosService {
     plato.actualizar(actualizaciones)
     return this.menu.guardarPlato(plato)
   }
+
 }
