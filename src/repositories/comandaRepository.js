@@ -43,10 +43,10 @@ export class ComandaRepository {
     return comanda;
   }
 
-  async dePlatoPedidoDB(platoPedidoDB){
+  async dePlatoPedidoDB(platoPedidoDB, platoDB){
     const platoPedido = new PlatoPedido();
     Object.assign(platoPedido, {
-      plato: await this.menu.obtenerPlatoPorId(platoPedidoDB.idPlato.toString()),
+      plato: platoDB || await this.menu.obtenerPlatoPorId(platoPedidoDB.idPlato.toString()),
       cantidad: platoPedidoDB.cantidad,
       notas: platoPedidoDB.notas,
       estaListo: platoPedidoDB.estaListo
@@ -60,10 +60,6 @@ export class ComandaRepository {
     return comanda
   }
 
-  listar(){
-    return this.comandas;
-  }
-
   async obtenerPorId(id){
     const comanda = await this.collection.findOne({_id: new ObjectId(id)});
     if(!comanda){
@@ -72,12 +68,41 @@ export class ComandaRepository {
     return await this.deComandaDB(comanda)
   }
 
-  listarPorFlags(platosPendientes, bebidasPendientes){
-    return this.comandas
-      .filter(c =>
-        (isUndefined(bebidasPendientes) || c.bebidasPendientes() === bebidasPendientes) &&
-        (isUndefined(platosPendientes) || c.platosPendientes() == platosPendientes)
-      );
+  async listarPorFlags(platosPendientes, bebidasPendientes){
+    const pipeline = [
+      {
+        $match: {
+          _id: {
+            $eq: new ObjectId("68198cb12ca5df7ba251b71e"),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "platos",
+          localField: "platos.idPlato",
+          foreignField: "_id",
+          as: "plato_mappings",
+        },
+      }]
+    const cursor = this.collection.aggregate(pipeline)
+    const comandas = [];
+    for await(const doc of cursor){
+      console.log("AGG",doc)
+      const comanda = new Comanda();
+      Object.assign(comanda, {
+        id: doc._id.toString(),
+        mesa: doc.mesa,
+        platos: await Promise.all(doc.platos.map(async platoPedidoDB => {
+          const platoDB = this.menu.dePlatoDB(doc.plato_mappings.find(pm => pm._id.equals(platoPedidoDB.idPlato)))
+          return await this.dePlatoPedidoDB(platoPedidoDB, platoDB)
+        })),
+        bebidasListas: doc.bebidasListas,
+        pagado: doc.pagado
+      })
+      comandas.push(comanda)
+    }
+    return comandas;
   }
 
   guardarComanda(id, comandaActualizada){

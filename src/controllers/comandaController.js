@@ -88,10 +88,11 @@ export class ComandaController {
     }
   }
 
-  buscarComanda(req, res) {
+  async buscarComanda(req, res) {
     const bebidasPendientes = req.query.bebidasPendientes && JSON.parse(req.query.bebidasPendientes);
     const platosPendientes = req.query.platosPendientes && JSON.parse(req.query.platosPendientes);
-    res.status(200).json(this.comandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
+    const comandas = await this.comandaRepository.listarPorFlags(platosPendientes, bebidasPendientes);
+    res.status(200).json(comandas.map(aComandaRest))
   }
 
   async verComanda(req, res) {
