@@ -26,3 +26,9 @@ npm start
 ```bash
 ./seed.sh
 ```
+
+## Consulta de la base de datos
+
+```bash
+docker exec -it mongo-kommanda  mongosh kommanda
+```
