@@ -11,6 +11,7 @@ crear_plato() {
   curl -s -XPOST "$URL" \
     -H 'Content-Type: application/json' \
     -d "{\"nombre\":\"$nombre\",\"categoria\":\"$categoria\",\"precio\": $precio}"
+  echo
 }
 
 # Entradas
