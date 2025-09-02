@@ -35,17 +35,28 @@ Categoria.PRINCIPAL = new Categoria("Principal", 1)
 Categoria.POSTRE = new Categoria("Postre", 2)
 Categoria.BEBIDA = new Categoria("Bebida", 3)
 
-class Comanda {
+export class Comanda {
+  id;
   mesa;
   platos;
   bebidasListas;
   pagado;
 
   constructor(mesa, platos) {
+    if(!mesa && !platos){
+      return;
+    }
+    this.validarParametros(mesa)
     this.mesa = mesa;
     this.platos = platos || [];
     this.bebidasListas = false
     this.pagado = false;
+  }
+
+  validarParametros(mesa) {
+    if (!mesa) {
+      throw new ComandaInvalida(`La comanda necesita numero de mesa` );
+    }
   }
 
   agregarPlato(plato) {
@@ -54,6 +65,26 @@ class Comanda {
 
   removerPlato(plato) {
     remove(this.platos, plato);
+  }
+
+  agregarNotas(ordenPlato, notas) {
+    this.platos[ordenPlato].agregarNotas(notas);
+  }
+
+  asignarCantidad(ordenPlato, cantidad) {
+    this.platos[ordenPlato].asignarCantidad(cantidad);
+  }
+
+  marcarListo(ordenPlato, estaListo) {
+    this.platos[ordenPlato].marcarListo(estaListo);
+  }
+
+  bebidasPendientes() {
+    return !this.bebidasListas;
+  }
+
+  platosPendientes() {
+    return this.platos.some(p => !p.estaListo);
   }
 
   marcarBebidasListas(bebidasListas) {
@@ -71,14 +102,14 @@ class Comanda {
       return EstadoComanda.PAGADO
     } else {
       const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria == maximaCategoriaLista)
+      return values(EstadoComanda).find(e => e.categoria === maximaCategoriaLista)
     }
   }
 
   estaLista(categoria) {
-    return this.platos
-      .filter(plato => plato.esDeCategoria(categoria))
-      .every(plato => plato.estaListo);
+    const platosCategoria = this.platos
+      .filter(plato => plato.esDeCategoria(categoria));
+    return !isEmpty(platosCategoria) && platosCategoria.every(plato => plato.estaListo);
   }
 
   totalAPagar(){
