@@ -1,28 +1,47 @@
-import {remove} from "lodash/array";
-import {isEmpty, max, maxBy, values} from "lodash";
-import {sumBy} from "lodash/math";
+import {negate, remove} from "lodash-es";
+import {isEmpty, max, maxBy, values} from "lodash-es";
+import {sumBy} from "lodash-es";
+import {PlatoInvalido} from "../excepciones/platos.js";
+import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
 
-class Plato {
+export class Plato {
+  id;
   nombre;
   categoria;
   precio;
   estaDisponible;
 
-  constructor(nombre, categoria, precio) {
+  constructor(args) {
+    const {nombre, categoria, precio} = args
+    this.validarParametros(precio, nombre, categoria);
     this.nombre = nombre;
     this.categoria = categoria;
     this.precio = precio;
     this.estaDisponible = true;
   }
 
+  validarParametros(precio, nombre, categoria) {
+    if ([precio, nombre, categoria].some(v => !v)) {
+      throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
+    }
+  }
+
+  actualizar(actualizacionesParciales){
+    reemplazarValoresNoNulos(this,actualizacionesParciales)
+  }
+
   esDeCategoria(categoria) {
-    this.categoria = categoria;
+    return this.categoria === categoria;
   }
 }
 
-class Categoria {
+export class Categoria {
   nombre;
   orden;
+
+  static fromString(token){
+    return values(Categoria).find(cat => cat.nombre === token)
+  }
 
   constructor(nombre, orden) {
     this.nombre = nombre;
@@ -30,10 +49,10 @@ class Categoria {
   }
 }
 
-Categoria.ENTRADA = new Categoria("Entrada", 0)
-Categoria.PRINCIPAL = new Categoria("Principal", 1)
-Categoria.POSTRE = new Categoria("Postre", 2)
-Categoria.BEBIDA = new Categoria("Bebida", 3)
+Categoria.ENTRADA = new Categoria("ENTRADA", 0)
+Categoria.PRINCIPAL = new Categoria("PRINCIPAL", 1)
+Categoria.POSTRE = new Categoria("POSTRE", 2)
+Categoria.BEBIDA = new Categoria("BEBIDA", 3)
 
 export class Comanda {
   id;
@@ -43,9 +62,6 @@ export class Comanda {
   pagado;
 
   constructor(mesa, platos) {
-    if(!mesa && !platos){
-      return;
-    }
     this.validarParametros(mesa)
     this.mesa = mesa;
     this.platos = platos || [];
@@ -117,7 +133,7 @@ export class Comanda {
   }
 }
 
-class EstadoComanda {
+export class EstadoComanda {
   nombre;
   categoria;
 
@@ -134,13 +150,16 @@ EstadoComanda.POSTRES_LISTOS = new EstadoComanda("POSTRES_LISTOS", Categoria.POS
 EstadoComanda.ENTREGADO = new EstadoComanda("ENTREGADO")
 EstadoComanda.PAGADO = new EstadoComanda("PAGADO")
 
-class PlatoPedido {
+export class PlatoPedido {
   plato;
   cantidad;
   notas;
   estaListo;
 
   constructor(plato, cantidad, notas) {
+    if([plato, cantidad, notas].every(v => !v)){
+      return;
+    }
     this.plato = plato;
     this.cantidad = cantidad;
     this.notas = notas;
@@ -148,19 +167,15 @@ class PlatoPedido {
   }
 
   esDeCategoria(categoria) {
-    this.plato.esDeCategoria(categoria);
+    return this.plato.esDeCategoria(categoria);
   }
 
-  agregarNota(nota) {
-    this.nota = nota
+  agregarNotas(notas) {
+    this.notas = notas
   }
 
-  incrementarCantidad(incremento) {
-    this.cantidad += incremento;
-  }
-
-  decrementarCantidad(decremento) {
-    this.cantidad = max(0, this.cantidad - decremento)
+  asignarCantidad(cantdad) {
+    this.cantidad = cantdad;
   }
 
   marcarListo(listo) {
