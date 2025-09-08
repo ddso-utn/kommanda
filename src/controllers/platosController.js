@@ -3,33 +3,13 @@ import {Menu} from "../repositories/menu.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
 import {PlatosService} from "../services/platosService.js";
 
-const aPlatoRest = (datosDelPlato) => {
-  return {
-    id: datosDelPlato.id,
-    nombre: datosDelPlato.nombre,
-    categoria: datosDelPlato.categoria.nombre,
-    precio: datosDelPlato.precio,
-    estaDisponible: datosDelPlato.estaDisponible,
-  }
-};
-
-const dePlatoRest = (platoRest) => {
-  //TODO realizar validaciones si corresponde
-  return {
-    nombre: platoRest.nombre,
-    categoria: platoRest.categoria && Categoria.fromString(platoRest.categoria),
-    precio: platoRest.precio,
-    estaDisponible: platoRest.disponible,
-  }
-};
-
 
 export const PlatosController = {
 
   crearPlato(req, res){
     try{
-      const plato = PlatosService.agregarPlato(dePlatoRest(req.body))
-      res.status(201).json(aPlatoRest(plato))
+      const plato = PlatosService.agregarPlato(req.body)
+      res.status(201).json(plato)
     } catch(error){
       console.error(error)
       if(error instanceof PlatoInvalido){
@@ -43,9 +23,9 @@ export const PlatosController = {
   actualizarPlato(req, res){
     try{
       const platoId = parseInt(req.params.id);
-      const actualizaciones = dePlatoRest(req.body)
+      const actualizaciones = req.body
       const platoActualizado = PlatosService.actualizarPlato(platoId, actualizaciones)
-      res.status(200).json(aPlatoRest(platoActualizado))
+      res.status(200).json(platoActualizado)
     } catch(error){
       console.error(error)
       if(error instanceof PlatoInvalido){
