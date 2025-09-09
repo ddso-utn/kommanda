@@ -70,5 +70,11 @@ export const ComandaController = {
       }
     }
   },
+
+  buscarComanda(req, res) {
+    const bebidasPendientes = req.query.bebidasPendientes && JSON.parse(req.query.bebidasPendientes);
+    const platosPendientes = req.query.platosPendientes && JSON.parse(req.query.platosPendientes);
+    res.status(200).json(ComandaRepository.listarPorFlags(platosPendientes, bebidasPendientes).map(aComandaRest))
+  }
 }
 

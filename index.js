@@ -25,6 +25,8 @@ app.get('/comandas/:id', ComandaController.verComanda)
 
 app.patch('/comandas/:id/platos/:ordenPlato', ComandaController.actualizarPlatoComanda)
 
+app.get('/comandas', ComandaController.buscarComanda)
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
