@@ -3,6 +3,7 @@ import {ComandaRepository} from "../repositories/comandaRepository.js";
 import {Menu} from "../repositories/menu.js";
 import {ComandaInexistente, ComandaInvalida} from "../excepciones/comandas.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
+import {ComandaService} from "../services/comandaService.js";
 
 const aComandaRest = (comanda) => {
   return {
@@ -24,15 +25,7 @@ export const ComandaController = {
 
   crearComanda(req, res) {
     try {
-      const mesa = req.body.mesa;
-      const platosPedidos = req.body.platos.map(p =>
-        new PlatoPedido(
-          Menu.obtenerPlatoPorId(p.idPlato),
-          p.cantidad,
-          p.notas
-        )
-      );
-      const comanda = ComandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
+      const comanda = ComandaService.crearComanda(req.body.mesa,req.body.platos)
       res.status(201).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)
@@ -59,20 +52,10 @@ export const ComandaController = {
 
   actualizarPlatoComanda(req, res) {
     try {
-      const idComanda = parseInt(req.params.id);
-      const comanda = ComandaRepository.obtenerPorId(idComanda);
-      const actualizacionesPlato = req.body;
       const ordenPlato = req.params.ordenPlato;
-      if(actualizacionesPlato.notas) {
-        comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
-      }
-      if(actualizacionesPlato.cantidad){
-        comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
-      }
-      if(actualizacionesPlato.estaListo){
-        comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
-      }
-      res.status(200).json(ComandaRepository.guardarComanda(idComanda, comanda))
+      const idComanda = parseInt(req.params.id);
+      const actualizacionesPlato = req.body;
+      res.status(200).json(aComandaRest(ComandaService.actualizarPlatoComanda(idComanda,actualizacionesPlato,ordenPlato)))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInexistente) {
