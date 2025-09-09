@@ -32,5 +32,29 @@ export const PlatosController = {
         })
       }
     }
-  }
+  },
+
+  actualizarPlato(req, res){
+    try{
+      const platoId = parseInt(req.params.id);
+      const actualizaciones = req.body
+      Plato.validarParametros(actualizaciones)
+      const platoActualizado =  Menu.obtenerPlatoPorId(platoId)
+      platoActualizado.nombre = actualizaciones.nombre
+      platoActualizado.categoria = actualizaciones.categoria
+      platoActualizado.precio = actualizaciones.precio
+      res.status(200).json(platoActualizado)
+    } catch(error){
+      console.error(error)
+      if(error instanceof PlatoInvalido){
+        res.status(400).json({
+          error: error.message,
+        })
+      } else if(error instanceof PlatoInexistente){
+        res.status(404).json({
+          error: error.message,
+        })
+      }
+    }
+  },
 }

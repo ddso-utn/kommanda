@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Platos API
+  title: Kommanda API
   version: 1.0.0
 paths:
   /platos:
@@ -71,6 +71,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Plato'
+        '400':
+          description: Datos invalidos
         '404':
           description: Plato no encontrado
     patch:
@@ -97,6 +99,96 @@ paths:
           description: Disponibilidad actualizada
         '404':
           description: Plato no encontrado
+  /comandas:
+    post:
+      summary: Crear una nueva comanda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevaComanda'
+      responses:
+        '201':
+          description: Comanda creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comanda'
+        '400':
+          description: Comanda invalida
+    get:
+      summary: Buscar comandas
+      parameters:
+        - in: query
+          name: bebidasPendientes
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: platosPendientes
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista de comandas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comanda'
+  /comandas/{id}:
+    get:
+      summary: Ver una comanda por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comanda encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comanda'
+        '404':
+          description: Comanda no encontrada
+  /comandas/{id}/platos/{ordenPlato}:
+    patch:
+      summary: Actualizar un plato dentro de una comanda (notas, cantidad, marcar listo)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: ordenPlato
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notas:
+                  type: string
+                cantidad:
+                  type: integer
+                estaListo:
+                  type: boolean
+      responses:
+        '200':
+          description: Plato actualizado en la comanda
+        '404':
+          description: Comanda o plato no encontrado
 components:
   schemas:
     NuevoPlato:
@@ -130,3 +222,57 @@ components:
           required:
             - id
             - estaDisponible
+    NuevaComanda:
+      type: object
+      properties:
+        mesa:
+          type: integer
+          example: 5
+        platos:
+          type: array
+          items:
+            type: object
+            properties:
+              idPlato:
+                type: integer
+              cantidad:
+                type: integer
+              notas:
+                type: string
+            required:
+              - idPlato
+              - cantidad
+      required:
+        - mesa
+        - platos
+    PlatoEnComanda:
+      type: object
+      properties:
+        nombre:
+          type: string
+        cantidad:
+          type: integer
+        precio:
+          type: number
+        notas:
+          type: string
+        estaListo:
+          type: boolean
+    Comanda:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        mesa:
+          type: integer
+          example: 5
+        estado:
+          type: string
+          enum: [INGRESADO, ENTRADAS_LISTAS, PRINCIPALES_LISTOS, POSTRES_LISTOS, ENTREGADO, PAGADO]
+        bebidasListas:
+          type: boolean
+        platos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatoEnComanda'

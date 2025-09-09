@@ -22,9 +22,7 @@ app.get('/platos', PlatosController.verPlatos)
 
 app.get('/platos/:id', PlatosController.verPlato)
 
-app.put('/platos/:id', (req, res) => {
-  res.status(200).json({ id: 1, nombre: "Milanesa con puré", precio: 10000, categoria: "PRINCIPAL", estaDisponible: true })
-})
+app.put('/platos/:id', PlatosController.actualizarPlato)
 
 app.patch('/platos/:id', (req, res) => {
   res.sendStatus(200)
