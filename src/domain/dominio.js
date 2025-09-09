@@ -2,7 +2,6 @@ import {negate, remove} from "lodash-es";
 import {isEmpty, max, maxBy, values} from "lodash-es";
 import {sumBy} from "lodash-es";
 import {PlatoInvalido} from "../excepciones/platos.js";
-import {reemplazarValoresNoNulos} from "../utils/object-utils.js";
 
 export class Plato {
   id;
@@ -25,9 +24,6 @@ export class Plato {
     }
   }
 
-  actualizar(actualizacionesParciales){
-    reemplazarValoresNoNulos(this,actualizacionesParciales)
-  }
 
   esDeCategoria(categoria) {
     this.categoria === categoria;

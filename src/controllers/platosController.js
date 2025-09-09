@@ -1,14 +1,12 @@
 import {Categoria, Plato} from "../domain/dominio.js";
 import {Menu} from "../repositories/menu.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
-import {PlatosService} from "../services/platosService.js";
-
 
 export const PlatosController = {
 
   crearPlato(req, res){
     try{
-      const plato = PlatosService.agregarPlato(req.body)
+      const plato = Menu.agregarPlato(new Plato(req.body))
       res.status(201).json(plato)
     } catch(error){
       console.error(error)
@@ -20,46 +18,20 @@ export const PlatosController = {
     }
   },
 
-  actualizarPlato(req, res){
-    try{
-      const platoId = parseInt(req.params.id);
-      const actualizaciones = req.body
-      const platoActualizado = PlatosService.actualizarPlato(platoId, actualizaciones)
-      res.status(200).json(platoActualizado)
-    } catch(error){
-      console.error(error)
-      if(error instanceof PlatoInvalido){
-        res.status(400).json({
-          error: error.message,
-        })
-      } else if(error instanceof PlatoInexistente){
-        res.status(404).json({
-          error: error.message,
-        })
-      }
-    }
-  },
-
-  marcarPlatoDisponible(req, res){
-    try{
-      const plato = Menu.guardarPlato(parseInt(req.params.id), dePlatoRest(req.body))
-      res.status(200).json(aPlatoRest(plato))
-    } catch(error){
-      console.error(error)
-      if(error instanceof PlatoInvalido){
-        res.status(400).json({
-          error: error.message,
-        })
-      } else if(error instanceof PlatoInexistente){
-        res.status(404).json({
-          error: error.message,
-        })
-      }
-    }
-  },
-
   verPlatos(req, res) {
-    res.status(200).json(Menu.listar().map(aPlatoRest))
+    res.status(200).json(Menu.listar())
+  },
+
+  verPlato(req, res) {
+    try{
+      res.status(200).json(Menu.obtenerPlatoPorId(parseInt(req.params.id)))
+    } catch (error) {
+      if(error instanceof PlatoInexistente){
+        res.status(404).json({
+          error: error.message,
+        })
+      }
+    }
   }
 }
 
