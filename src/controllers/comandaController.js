@@ -75,7 +75,12 @@ export const ComandaController = {
       res.status(200).json(ComandaRepository.guardarComanda(idComanda, comanda))
     } catch (error) {
       console.error(error)
-      if (error instanceof ComandaInvalida) {
+      if (error instanceof ComandaInexistente) {
+        res.status(404).json({
+          error: error.message,
+        })
+      }
+      if (error instanceof ComandaInvalida || error instanceof PlatoInexistente) {
         res.status(400).json({
           error: error.message,
         })
