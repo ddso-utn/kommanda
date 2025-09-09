@@ -12,7 +12,7 @@ export class Plato {
 
   static validarParametros({precio, nombre, categoria}) {
     if ([precio, nombre, categoria].some(v => !v)) {
-      throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
+      throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}`);
     }
   }
 
@@ -33,7 +33,7 @@ export class Categoria {
   nombre;
   orden;
 
-  static fromString(token){
+  static fromString(token) {
     return values(Categoria).find(cat => cat.nombre === token)
   }
 
@@ -65,7 +65,7 @@ export class Comanda {
 
   validarParametros(mesa) {
     if (!mesa) {
-      throw new ComandaInvalida(`La comanda necesita numero de mesa` );
+      throw new ComandaInvalida(`La comanda necesita numero de mesa`);
     }
   }
 
@@ -102,7 +102,9 @@ export class Comanda {
   }
 
   categoriasListas() {
-    return values(Categoria).filter(categoria => categoria !== Categoria.BEBIDA && this.estaLista(categoria));
+    return values(Categoria).filter(categoria =>
+      categoria !== Categoria.BEBIDA && this.estaLista(categoria) && this.hayPlatosDe(categoria)
+    );
   }
 
   estado() {
@@ -112,8 +114,12 @@ export class Comanda {
       return EstadoComanda.PAGADO
     } else {
       const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria == maximaCategoriaLista)
+      return values(EstadoComanda).filter(e => e.categoria === maximaCategoriaLista)
     }
+  }
+
+  hayPlatosDe(categoria) {
+    return !isEmpty(this.platos.filter(plato => plato.esDeCategoria(categoria)))
   }
 
   estaLista(categoria) {
@@ -122,7 +128,7 @@ export class Comanda {
       .every(plato => plato.estaListo);
   }
 
-  totalAPagar(){
+  totalAPagar() {
     return sumBy(this.platos, p => p.costoFinal())
   }
 }
