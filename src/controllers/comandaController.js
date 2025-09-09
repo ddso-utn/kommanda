@@ -1,7 +1,7 @@
 import {Comanda, PlatoPedido} from "../domain/dominio.js";
 import {ComandaRepository} from "../repositories/comandaRepository.js";
 import {Menu} from "../repositories/menu.js";
-import {ComandaInvalida} from "../excepciones/comandas.js";
+import {ComandaInexistente, ComandaInvalida} from "../excepciones/comandas.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
 
 export const ComandaController = {
@@ -22,6 +22,19 @@ export const ComandaController = {
       console.error(error)
       if (error instanceof ComandaInvalida || error instanceof PlatoInexistente) {
         res.status(400).json({
+          error: error.message,
+        })
+      }
+    }
+  },
+
+  verComanda(req, res) {
+    try {
+      res.status(200).json(ComandaRepository.obtenerPorId(parseInt(req.params.id)))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof ComandaInexistente) {
+        res.status(404).json({
           error: error.message,
         })
       }

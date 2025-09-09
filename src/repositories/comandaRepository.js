@@ -1,4 +1,5 @@
 import {clone, isUndefined, remove} from "lodash-es";
+import {ComandaInexistente} from "../excepciones/comandas.js";
 
 export const ComandaRepository = {
   comandas: [],
