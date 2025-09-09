@@ -4,6 +4,22 @@ import {Menu} from "../repositories/menu.js";
 import {ComandaInexistente, ComandaInvalida} from "../excepciones/comandas.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
 
+const aComandaRest = (comanda) => {
+  return {
+    id: comanda.id,
+    mesa: comanda.mesa,
+    estado: comanda.estado().nombre,
+    bebidasListas: comanda.bebidasListas,
+    platos: comanda.platos.map(p => ({
+      nombre: p.plato.nombre,
+      cantidad: p.cantidad,
+      precio: p.plato.precio,
+      notas: p.notas,
+      estaListo: p.estaListo,
+    }))
+  }
+};
+
 export const ComandaController = {
 
   crearComanda(req, res) {
@@ -17,7 +33,7 @@ export const ComandaController = {
         )
       );
       const comanda = ComandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
-      res.status(201).json(comanda)
+      res.status(201).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida || error instanceof PlatoInexistente) {
@@ -30,7 +46,7 @@ export const ComandaController = {
 
   verComanda(req, res) {
     try {
-      res.status(200).json(ComandaRepository.obtenerPorId(parseInt(req.params.id)))
+      res.status(200).json(aComandaRest(ComandaRepository.obtenerPorId(parseInt(req.params.id))))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInexistente) {
