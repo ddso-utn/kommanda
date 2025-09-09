@@ -25,7 +25,7 @@ export class Plato {
   }
 
   esDeCategoria(categoria) {
-    this.categoria === categoria;
+    return this.categoria === categoria;
   }
 }
 
@@ -114,7 +114,7 @@ export class Comanda {
       return EstadoComanda.PAGADO
     } else {
       const maximaCategoriaLista = maxBy(this.categoriasListas(), c => c.orden)
-      return values(EstadoComanda).filter(e => e.categoria === maximaCategoriaLista)
+      return values(EstadoComanda).find(e => e.categoria === maximaCategoriaLista)
     }
   }
 
@@ -164,7 +164,7 @@ export class PlatoPedido {
   }
 
   esDeCategoria(categoria) {
-    this.plato.esDeCategoria(categoria);
+    return this.plato.esDeCategoria(categoria);
   }
 
   agregarNotas(notas) {
