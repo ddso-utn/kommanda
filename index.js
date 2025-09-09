@@ -16,6 +16,8 @@ app.get('/platos', PlatosController.verPlatos)
 
 app.get('/platos/:id', PlatosController.verPlato)
 
+app.put('/platos/:id', PlatosController.actualizarPlato)
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
