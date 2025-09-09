@@ -10,20 +10,19 @@ export class Plato {
   precio;
   estaDisponible;
 
-  constructor({nombre, categoria, precio}) {
-    this.validarParametros(precio, nombre, categoria);
-    this.nombre = nombre;
-    this.categoria = categoria;
-    this.precio = precio;
-    this.estaDisponible = true;
-  }
-
-  validarParametros(precio, nombre, categoria) {
+  static validarParametros({precio, nombre, categoria}) {
     if ([precio, nombre, categoria].some(v => !v)) {
       throw new PlatoInvalido(`El plato necesita precio, nombre y categoria, se recibio nombre: ${nombre}, categoria: ${categoria}, precio: ${precio}` );
     }
   }
 
+  constructor({nombre, categoria, precio}) {
+    Plato.validarParametros({precio, nombre, categoria});
+    this.nombre = nombre;
+    this.categoria = categoria;
+    this.precio = precio;
+    this.estaDisponible = true;
+  }
 
   esDeCategoria(categoria) {
     this.categoria === categoria;
