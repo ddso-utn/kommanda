@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  title: Platos API
+  version: 1.0.0
+paths:
+  /platos:
+    post:
+      summary: Crear un nuevo plato
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoPlato'
+      responses:
+        '201':
+          description: Plato creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plato'
+        '400':
+          description: Plato invalido
+    get:
+      summary: Ver todos los platos
+      responses:
+        '200':
+          description: Lista de platos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plato'
+  /platos/{id}:
+    get:
+      summary: Ver un plato por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Plato encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plato'
+        '404':
+          description: Plato no encontrado
+    put:
+      summary: Reemplazar un plato por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevoPlato'
+      responses:
+        '200':
+          description: Plato actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plato'
+        '404':
+          description: Plato no encontrado
+    patch:
+      summary: Marcar plato como disponible o no disponible
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estaDisponible:
+                  type: boolean
+              required:
+                - estaDisponible
+      responses:
+        '200':
+          description: Disponibilidad actualizada
+        '404':
+          description: Plato no encontrado
+components:
+  schemas:
+    NuevoPlato:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: "Milanesa con puré"
+        categoria:
+          type: string
+          enum: [ENTRADA, PRINCIPAL, POSTRE, BEBIDA]
+          example: "PRINCIPAL"
+        precio:
+          type: number
+          example: 10000
+      required:
+        - nombre
+        - categoria
+        - precio
+    Plato:
+      allOf:
+        - $ref: '#/components/schemas/NuevoPlato'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            estaDisponible:
+              type: boolean
+              example: true
+          required:
+            - id
+            - estaDisponible
