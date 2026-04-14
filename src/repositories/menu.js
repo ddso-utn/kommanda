@@ -1,4 +1,5 @@
 import {remove} from "lodash-es";
+import {PlatoInexistente} from "../excepciones/platos.js";
 
 export const Menu = {
   platos: [],
@@ -14,7 +15,11 @@ export const Menu = {
   },
 
   obtenerPlatoPorId(id){
-    return this.platos.find(p => p.id === id);
+    const plato = this.platos.find(p => p.id === id);
+    if(!plato){
+      throw new PlatoInexistente(id)
+    }
+    return plato;
   },
 
   guardarPlato(platoActualizado){
