@@ -5,6 +5,7 @@ import { readFileSync } from 'fs'
 import { parse } from 'yaml'
 import {Plato} from "./src/domain/plato.js";
 import {Menu} from "./src/repositories/menu.js";
+import {PlatoInvalido} from "./src/excepciones/platos.js";
 
 const app = express()
 const port = 3000
@@ -18,8 +19,14 @@ app.get('/healthCheck', (req, res) => {
 })
 
 app.post('/platos', (req, res) => {
-  const plato = Menu.agregarPlato(new Plato(req.body))
-  res.status(201).json(plato)
+  try {
+    const plato = Menu.agregarPlato(new Plato(req.body))
+    res.status(201).json(plato)
+  } catch(error) {
+    if(error instanceof PlatoInvalido) {
+      res.status(400).json({ error: error.message })
+    }
+  }
 })
 
 app.get('/platos', (req, res) => {
