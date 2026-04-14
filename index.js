@@ -3,6 +3,8 @@ import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import { readFileSync } from 'fs'
 import { parse } from 'yaml'
+import {Plato} from "./src/domain/plato.js";
+import {Menu} from "./src/repositories/menu.js";
 
 const app = express()
 const port = 3000
@@ -16,7 +18,8 @@ app.get('/healthCheck', (req, res) => {
 })
 
 app.post('/platos', (req, res) => {
-  res.status(201).json({ id: 1, nombre: "Milanesa con puré", precio: 10000, categoria: "PRINCIPAL", estaDisponible: true })
+  const plato = Menu.agregarPlato(new Plato(req.body))
+  res.status(201).json(plato)
 })
 
 app.get('/platos', (req, res) => {
