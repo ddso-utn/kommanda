@@ -22,6 +22,14 @@ export const ComandaRepository = {
     return comanda;
   },
 
+  listarPorFlags(platosPendientes, bebidasPendientes){
+    return this.comandas
+      .filter(c =>
+        (isUndefined(bebidasPendientes) || c.bebidasPendientes() === bebidasPendientes) &&
+        (isUndefined(platosPendientes) || c.platosPendientes() == platosPendientes)
+      );
+  },
+
   guardarComanda(id, comandaActualizada){
     remove(this.comandas, c=> c.id === id)
     this.comandas.push(comandaActualizada);
