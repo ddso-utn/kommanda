@@ -2,8 +2,24 @@ import {Comanda} from "../domain/comanda.js";
 import {PlatoPedido} from "../domain/platoPedido.js";
 import {ComandaRepository} from "../repositories/comandaRepository.js";
 import {Menu} from "../repositories/menu.js";
-import {ComandaInvalida} from "../excepciones/comandas.js";
+import {ComandaInexistente, ComandaInvalida} from "../excepciones/comandas.js";
 import {PlatoInexistente, PlatoInvalido} from "../excepciones/platos.js";
+
+const aComandaRest = (comanda) => {
+  return {
+    id: comanda.id,
+    mesa: comanda.mesa,
+    estado: comanda.estado().nombre,
+    bebidasListas: comanda.bebidasListas,
+    platos: comanda.platos.map(p => ({
+      nombre: p.plato.nombre,
+      cantidad: p.cantidad,
+      precio: p.plato.precio,
+      notas: p.notas,
+      estaListo: p.estaListo,
+    }))
+  }
+};
 
 export const ComandaController = {
 
@@ -18,11 +34,24 @@ export const ComandaController = {
         )
       );
       const comanda = ComandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
-      res.status(201).json(comanda)
+      res.status(201).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)
       if (error instanceof ComandaInvalida || error instanceof PlatoInexistente) {
         res.status(400).json({
+          error: error.message,
+        })
+      }
+    }
+  },
+
+  verComanda(req, res) {
+    try {
+      res.status(200).json(aComandaRest(ComandaRepository.obtenerPorId(parseInt(req.params.id))))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof ComandaInexistente) {
+        res.status(404).json({
           error: error.message,
         })
       }
