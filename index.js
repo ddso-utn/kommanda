@@ -31,6 +31,8 @@ app.patch('/platos/:id', (req, res) => {
 
 app.post('/comandas', ComandaController.crearComanda)
 
+app.get('/comandas/:id', ComandaController.verComanda)
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
