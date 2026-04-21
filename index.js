@@ -4,6 +4,7 @@ import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import { readFileSync } from 'fs'
 import { parse } from 'yaml'
+import {ComandaController} from "./src/controllers/comandaController.js";
 
 const app = express()
 const port = 3000
@@ -27,6 +28,8 @@ app.put('/platos/:id', PlatosController.actualizarPlato)
 app.patch('/platos/:id', (req, res) => {
   res.sendStatus(200)
 })
+
+app.post('/comandas', ComandaController.crearComanda)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
