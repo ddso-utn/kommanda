@@ -56,6 +56,37 @@ export const ComandaController = {
         })
       }
     }
-  }
+  },
+
+  actualizarPlatoComanda(req, res) {
+    try {
+      const idComanda = parseInt(req.params.id);
+      const comanda = ComandaRepository.obtenerPorId(idComanda);
+      const actualizacionesPlato = req.body;
+      const ordenPlato = req.params.ordenPlato;
+      if(actualizacionesPlato.notas) {
+        comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
+      }
+      if(actualizacionesPlato.cantidad){
+        comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
+      }
+      if(actualizacionesPlato.estaListo){
+        comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
+      }
+      res.status(200).json(ComandaRepository.guardarComanda(idComanda, comanda))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof ComandaInexistente) {
+        res.status(404).json({
+          error: error.message,
+        })
+      }
+      if (error instanceof ComandaInvalida || error instanceof PlatoInexistente) {
+        res.status(400).json({
+          error: error.message,
+        })
+      }
+    }
+  },
 }
 
