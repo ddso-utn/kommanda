@@ -10,7 +10,7 @@ const DB_NAME = "kommanda"
 export const buildAppContext = (DB_CLIENT) => {
   const db = DB_CLIENT.db(DB_NAME)
   const menu = new Menu(db)
-  const comandaRepository = new ComandaRepository(db)
+  const comandaRepository = new ComandaRepository(db, menu)
   const platosService = new PlatosService(menu)
   const comandaService = new ComandaService(comandaRepository, menu)
   const platosController = new PlatosController(platosService, menu)

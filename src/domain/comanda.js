@@ -11,6 +11,7 @@ export class Comanda {
   pagado;
 
   constructor(mesa, platos) {
+    if (!mesa) return;
     this.validarParametros(mesa)
     this.mesa = mesa;
     this.platos = platos || [];

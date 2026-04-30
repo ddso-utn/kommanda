@@ -18,11 +18,11 @@ export class ComandaService {
         p.notas
       )
     ));
-    return this.comandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
+    return await this.comandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
   }
 
   async agregarPlatoComanda(idComanda, datosPlato) {
-    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+    const comanda = await this.comandaRepository.obtenerPorId(idComanda);
     const nuevoPlato = new PlatoPedido(
       await this.menu.obtenerPlatoPorId(datosPlato.idPlato),
       datosPlato.cantidad,
@@ -32,14 +32,14 @@ export class ComandaService {
     return comanda;
   }
 
-  actualizarBebidasComanda(idComanda, bebidasListas) {
-    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+  async actualizarBebidasComanda(idComanda, bebidasListas) {
+    const comanda = await this.comandaRepository.obtenerPorId(idComanda);
     comanda.marcarBebidasListas(bebidasListas)
     return comanda;
   }
 
-  actualizarPlatoComanda(idComanda, actualizacionesPlato, ordenPlato) {
-    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+  async actualizarPlatoComanda(idComanda, actualizacionesPlato, ordenPlato) {
+    const comanda = await this.comandaRepository.obtenerPorId(idComanda);
     if (actualizacionesPlato.notas) {
       comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
     }
@@ -49,7 +49,6 @@ export class ComandaService {
     if (actualizacionesPlato.estaListo) {
       comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
     }
-    this.comandaRepository.guardarComanda(idComanda, comanda);
     return comanda
   }
 }
