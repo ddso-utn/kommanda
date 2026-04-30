@@ -26,9 +26,9 @@ export class ComandaController {
     this.comandaRepository = comandaRepository;
   }
 
-  crearComanda(req, res) {
+  async crearComanda(req, res) {
     try {
-      const comanda = this.comandaService.crearComanda(req.body.mesa, req.body.platos)
+      const comanda = await this.comandaService.crearComanda(req.body.mesa, req.body.platos)
       res.status(201).json(aComandaRest(comanda))
     } catch (error) {
       console.error(error)

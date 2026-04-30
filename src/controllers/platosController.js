@@ -28,9 +28,9 @@ export class PlatosController {
     this.menu = menu;
   }
 
-  crearPlato(req, res) {
+  async crearPlato(req, res) {
     try {
-      const plato = this.platosService.agregarPlato(dePlatoRest(req.body))
+      const plato = await this.platosService.agregarPlato(dePlatoRest(req.body))
       res.status(201).json(aPlatoRest(plato))
     } catch (error) {
       console.error(error)
@@ -40,13 +40,13 @@ export class PlatosController {
     }
   }
 
-  verPlatos(req, res) {
-    res.status(200).json(this.menu.listar().map(aPlatoRest))
+  async verPlatos(req, res) {
+    res.status(200).json((await this.menu.listar()).map(aPlatoRest))
   }
 
-  verPlato(req, res) {
+  async verPlato(req, res) {
     try {
-      res.status(200).json(aPlatoRest(this.menu.obtenerPlatoPorId(parseInt(req.params.id))))
+      res.status(200).json(aPlatoRest(await this.menu.obtenerPlatoPorId(req.params.id)))
     } catch (error) {
       if (error instanceof PlatoInexistente) {
         res.status(404).json({ error: error.message })
@@ -54,11 +54,9 @@ export class PlatosController {
     }
   }
 
-  actualizarPlato(req, res) {
+  async actualizarPlato(req, res) {
     try {
-      const platoId = parseInt(req.params.id);
-      const actualizaciones = dePlatoRest(req.body)
-      const platoActualizado = this.platosService.actualizarPlato(platoId, actualizaciones)
+      const platoActualizado = await this.platosService.actualizarPlato(req.params.id, dePlatoRest(req.body))
       res.status(200).json(aPlatoRest(platoActualizado))
     } catch (error) {
       console.error(error)
@@ -70,11 +68,11 @@ export class PlatosController {
     }
   }
 
-  marcarPlatoDisponible(req, res) {
+  async marcarPlatoDisponible(req, res) {
     try {
-      const plato = this.menu.obtenerPlatoPorId(parseInt(req.params.id))
+      const plato = await this.menu.obtenerPlatoPorId(req.params.id)
       plato.estaDisponible = req.body.estaDisponible ?? !plato.estaDisponible
-      res.status(200).json(aPlatoRest(this.menu.guardarPlato(plato)))
+      res.status(200).json(aPlatoRest(await this.menu.guardarPlato(plato)))
     } catch (error) {
       if (error instanceof PlatoInexistente) {
         res.status(404).json({ error: error.message })
