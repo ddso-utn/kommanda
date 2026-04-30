@@ -1,46 +1,47 @@
-import {clone, isUndefined, remove} from "lodash-es";
+import {isUndefined, remove} from "lodash-es";
 import {ComandaInexistente} from "../excepciones/comandas.js";
 
-export const ComandaRepository = {
-  comandas: [],
+export class ComandaRepository {
+  db
+  comandas = []
 
-  agregarComanda(comanda){
+  constructor(db) {
+    this.db = db;
+  }
+
+  agregarComanda(comanda) {
     comanda.id = this.obtenerSiguienteId()
     this.comandas.push(comanda);
     return comanda
-  },
+  }
 
-  listar(){
+  listar() {
     return this.comandas;
-  },
+  }
 
-  obtenerPorId(id){
+  obtenerPorId(id) {
     const comanda = this.comandas.find(c => c.id === id);
-    if(!comanda){
+    if (!comanda) {
       throw new ComandaInexistente(id)
     }
     return comanda;
-  },
+  }
 
-  listarPorFlags(platosPendientes, bebidasPendientes){
+  listarPorFlags(platosPendientes, bebidasPendientes) {
     return this.comandas
       .filter(c =>
         (isUndefined(bebidasPendientes) || c.bebidasPendientes() === bebidasPendientes) &&
         (isUndefined(platosPendientes) || c.platosPendientes() == platosPendientes)
       );
-  },
+  }
 
-  guardarComanda(id, comandaActualizada){
-    remove(this.comandas, c=> c.id === id)
+  guardarComanda(id, comandaActualizada) {
+    remove(this.comandas, c => c.id === id)
     this.comandas.push(comandaActualizada);
     return comandaActualizada;
-  },
+  }
 
-  borrar(comanda){
-    remove(this.comandas, c => c.nombre === comanda.nombre);
-  },
-
-  obtenerSiguienteId() {//TODO en una DB real no es necesario
+  obtenerSiguienteId() {
     return (this.comandas[this.comandas.length - 1]?.id || 0) + 1;
   }
 }

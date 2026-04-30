@@ -21,6 +21,12 @@ export class Plato {
     this.estaDisponible = true;
   }
 
+  actualizar(actualizaciones) {
+    if (actualizaciones.nombre) this.nombre = actualizaciones.nombre;
+    if (actualizaciones.categoria) this.categoria = actualizaciones.categoria;
+    if (actualizaciones.precio) this.precio = actualizaciones.precio;
+  }
+
   esDeCategoria(categoria) {
     return this.categoria === categoria;
   }

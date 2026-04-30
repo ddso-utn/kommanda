@@ -1,38 +1,39 @@
 import {remove} from "lodash-es";
 import {PlatoInexistente} from "../excepciones/platos.js";
 
-export const Menu = {
-  platos: [],
+export class Menu {
+  db
+  platos = []
 
-  agregarPlato(plato){
+  constructor(db) {
+    this.db = db;
+  }
+
+  agregarPlato(plato) {
     plato.id = this.obtenerSiguienteId()
     this.platos.push(plato);
     return plato
-  },
+  }
 
-  listar(){
+  listar() {
     return this.platos;
-  },
+  }
 
-  obtenerPlatoPorId(id){
+  obtenerPlatoPorId(id) {
     const plato = this.platos.find(p => p.id === id);
-    if(!plato){
+    if (!plato) {
       throw new PlatoInexistente(id)
     }
     return plato;
-  },
+  }
 
-  guardarPlato(platoActualizado){
+  guardarPlato(platoActualizado) {
     remove(this.platos, p => p.id === platoActualizado.id)
     this.platos.push(platoActualizado);
     return platoActualizado
-  },
+  }
 
-  borrar(plato){
-    remove(this.platos, p => p.nombre === plato.nombre);
-  },
-
-  obtenerSiguienteId() { //TODO en una DB real no es necesario
+  obtenerSiguienteId() {
     return (this.platos[this.platos.length - 1]?.id || 0) + 1;
   }
 }

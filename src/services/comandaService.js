@@ -1,33 +1,55 @@
-import {ComandaRepository} from "../repositories/comandaRepository.js";
 import {Comanda} from "../domain/comanda.js";
 import {PlatoPedido} from "../domain/platoPedido.js";
-import {Menu} from "../repositories/menu.js";
 
-export const ComandaService = {
+export class ComandaService {
+  comandaRepository
+  menu
+
+  constructor(comandaRepository, menu) {
+    this.comandaRepository = comandaRepository;
+    this.menu = menu;
+  }
 
   crearComanda(mesa, platos) {
     const platosPedidos = platos.map(p =>
       new PlatoPedido(
-        Menu.obtenerPlatoPorId(p.idPlato),
+        this.menu.obtenerPlatoPorId(p.idPlato),
         p.cantidad,
         p.notas
       )
     );
-    return ComandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
-  },
+    return this.comandaRepository.agregarComanda(new Comanda(mesa, platosPedidos))
+  }
 
-  actualizarPlatoComanda(idComanda, actualizacionesPlato, ordenPlato){
-    const comanda = ComandaRepository.obtenerPorId(idComanda);
-    if(actualizacionesPlato.notas) {
+  agregarPlatoComanda(idComanda, datosPlato) {
+    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+    const nuevoPlato = new PlatoPedido(
+      this.menu.obtenerPlatoPorId(datosPlato.idPlato),
+      datosPlato.cantidad,
+      datosPlato.notas
+    )
+    comanda.agregarPlato(nuevoPlato)
+    return comanda;
+  }
+
+  actualizarBebidasComanda(idComanda, bebidasListas) {
+    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+    comanda.marcarBebidasListas(bebidasListas)
+    return comanda;
+  }
+
+  actualizarPlatoComanda(idComanda, actualizacionesPlato, ordenPlato) {
+    const comanda = this.comandaRepository.obtenerPorId(idComanda);
+    if (actualizacionesPlato.notas) {
       comanda.agregarNotas(ordenPlato, actualizacionesPlato.notas)
     }
-    if(actualizacionesPlato.cantidad){
+    if (actualizacionesPlato.cantidad) {
       comanda.asignarCantidad(ordenPlato, actualizacionesPlato.cantidad)
     }
-    if(actualizacionesPlato.estaListo){
+    if (actualizacionesPlato.estaListo) {
       comanda.marcarListo(ordenPlato, actualizacionesPlato.estaListo)
     }
-    ComandaRepository.guardarComanda(idComanda, comanda);
+    this.comandaRepository.guardarComanda(idComanda, comanda);
     return comanda
   }
 }
