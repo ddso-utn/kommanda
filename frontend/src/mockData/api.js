@@ -73,9 +73,9 @@ const PLATOS = [
   }
 ]
 
-export const getPlatos = () => new Promise.resolve(PLATOS)
+export const getPlatos = () => Promise.resolve(PLATOS)
 
-export const putCommanda = (platos) => new Promise.resolve({
+export const putCommanda = (platos) => Promise.resolve({
   estado: "OK",
   mesa: 10,
   platos,
