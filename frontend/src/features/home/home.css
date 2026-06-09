@@ -63,4 +63,20 @@
       justify-content: flex-end;
     }
   }
+
+  .selected {
+    border: 6px solid black;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 50px;
+
+    button {
+      padding: 5px;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+  }
 }

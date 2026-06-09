@@ -76,7 +76,7 @@ const PLATOS = [
 export const getPlatos = () => new Promise.resolve(PLATOS)
 
 export const putCommanda = (platos) => new Promise.resolve({
-  estado: "OK"
+  estado: "OK",
   mesa: 10,
   platos,
 })

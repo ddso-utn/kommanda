@@ -1,4 +1,5 @@
 import "./home.css"
+import {useState} from "react";
 
 
 const PLATOS = [
@@ -89,7 +90,13 @@ const NavBar = ({logo, slogan}) => {
 }
 
 const CardPlato = ({nombre, imagen, precio}) => {
-  return <div className="card">
+  const [seleccionado, setSeleccionado] = useState(false)
+
+  const cambiarSeleccion = () => {
+    setSeleccionado(!seleccionado)
+  }
+
+  return <div className={seleccionado ? "card selected" : "card"} onClick={cambiarSeleccion}>
     <h3>{nombre}</h3>
     <img src={imagen}/>
     <p className="price">${precio}</p>
@@ -106,6 +113,10 @@ const ListaPlatos = ({}) => {
   }</div>
 }
 
+const agregarAComanda = (platos) => {
+  console.log("Vamos a agregar Estos Platos", platos)
+}
+
 const Home = () => {
   return (
     <section className="home">
@@ -113,6 +124,9 @@ const Home = () => {
       <div className="content">
         <Titulo texto="Platos"/>
         <ListaPlatos/>
+      </div>
+      <div class="actions">
+        <button>Agregar a comanda</button>
       </div>
     </section>
   )
