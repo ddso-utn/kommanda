@@ -1,5 +1,5 @@
 import {createContext, useEffect, useState} from "react";
-import {getBebidas} from "../mockData/api";
+import {getBebidas} from "../api/api";
 
 export const BebidasContext = createContext()
 
