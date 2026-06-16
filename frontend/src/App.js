@@ -7,6 +7,7 @@ import Bebidas from "./features/bebidas/bebidas";
 import {Comanda} from "./features/pedido/comanda";
 import {useEffect, useState} from "react";
 import {getBebidas, getPlatos, putCommanda} from "./mockData/api";
+import axios from "axios";
 
 function App() {
   const [platos, setPlatos] = useState([]);
@@ -14,7 +15,9 @@ function App() {
   const [comanda, setComanda] = useState({platos: [], bebidas: []});
 
   useEffect(() => {
-    const cargarPlatos = async () => setPlatos(await getPlatos())
+    const cargarPlatos = async () => setPlatos(
+      await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos').then(r => r.data)
+    )
     cargarPlatos()
   }, [])
 

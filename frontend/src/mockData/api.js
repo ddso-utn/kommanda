@@ -1,3 +1,4 @@
+//https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos
 const PLATOS = [
   {
     id: 1,
@@ -85,6 +86,7 @@ const PLATOS = [
   }
 ];
 
+//https://68486e64ec44b9f34940e355.mockapi.io/kommanda/bebidas
 const BEBIDAS = [
     {
       "id": 1,
