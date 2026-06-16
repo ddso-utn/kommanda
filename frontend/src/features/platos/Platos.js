@@ -1,17 +1,10 @@
-import "./home.css"
+import "./platos.css"
 import {useEffect, useState} from "react";
 import {getPlatos, putCommanda} from "../../mockData/api";
 
 
 const Titulo = ({texto}) => {
   return <h1 className="title">{texto}</h1>
-}
-
-const NavBar = ({logo, slogan}) => {
-  return <nav className="nav">
-    <div className="logo">{logo}</div>
-    <div className="">{slogan}</div>
-  </nav>
 }
 
 const CardPlato = ({nombre, imagen, precio, seleccionado, alSeleccionarPlato}) => {
@@ -38,7 +31,7 @@ const ListaPlatos = ({platos, cambiarSeleccionPlato}) => {
   }</div>
 }
 
-const Home = () => {
+const Platos = () => {
   const [platos, setPlatos] = useState([])
 
   useEffect(() => {
@@ -69,7 +62,6 @@ const Home = () => {
 
   return (
     platos.length === 0 ? "Cargando..." : <section className="home">
-      <NavBar logo="Kommanda" slogan="El sitio con +50 platos!"/>
       <div className="content">
         <Titulo texto="Platos"/>
         <ListaPlatos
@@ -84,4 +76,4 @@ const Home = () => {
   )
 };
 
-export default Home;
+export default Platos;
