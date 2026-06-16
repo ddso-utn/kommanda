@@ -1,18 +1,12 @@
 import "./bebidas.css"
-import {useEffect, useState} from "react";
-import {getBebidas, putCommanda} from "../../mockData/api";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router";
+import {BebidasContext} from "../../context/bebidasProvider";
+import {ComandaContext} from "../../context/comandaProvider";
 
 
 const Titulo = ({texto}) => {
   return <h1 className="title">{texto}</h1>
-}
-
-const NavBar = ({logo, slogan}) => {
-  return <nav className="nav">
-    <div className="logo">{logo}</div>
-    <div className="">{slogan}</div>
-  </nav>
 }
 
 const CardBebida = ({nombre, imagen, precio, seleccionado, alSeleccionarBebida}) => {
@@ -39,7 +33,9 @@ const ListaBebidas = ({bebidas, cambiarSeleccionBebida}) => {
   }</div>
 }
 
-const Bebidas = ({todasLasBebidas, alAgregarAComanda})=> {
+const Bebidas = ()=> {
+  const {bebidas: todasLasBebidas} = useContext(BebidasContext);
+  const {agregarBebidasAComanda : alAgregarAComanda} = useContext(ComandaContext);
   const [bebidas, setBebidas] = useState(todasLasBebidas)
   const navigate = useNavigate();
 

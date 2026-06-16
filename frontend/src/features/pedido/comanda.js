@@ -1,6 +1,9 @@
 import {Titulo} from "../platos/Platos";
+import {useContext} from "react";
+import {ComandaContext} from "../../context/comandaProvider";
 
-export const Comanda = ({comanda}) => {
+export const Comanda = () => {
+  const {comanda} = useContext(ComandaContext);
   return <div className="content">
     <Titulo texto="Comanda"/>
     <div>
