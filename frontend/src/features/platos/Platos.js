@@ -44,10 +44,6 @@ const Platos = ({todosLosPlatos, alAgregarAComanda}) => {
   const [platos, setPlatos] = useState(todosLosPlatos)
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const cargarPlatos = async () => setPlatos(await getPlatos())
-    cargarPlatos()
-  }, [])
 
   const platosSeleccionados = () =>
     platos.filter(p => p.seleccionado)
@@ -79,7 +75,7 @@ const Platos = ({todosLosPlatos, alAgregarAComanda}) => {
   )
 
   return (
-    platos.length === 0 ? "Cargando..." : <section className="home">
+    <section className="home">
       <div className="content">
         <Titulo texto="Pedido"/>
         <ListaPlatos
