@@ -1,9 +1,10 @@
 import "./platos.css"
 import {useEffect, useState} from "react";
 import {getPlatos, putCommanda} from "../../mockData/api";
+import {useNavigate} from "react-router";
 
 
-const Titulo = ({texto}) => {
+export const Titulo = ({texto}) => {
   return <h1 className="title">{texto}</h1>
 }
 
@@ -39,8 +40,9 @@ const ListaPlatos = ({platos, cambiarSeleccionPlato, cambiarNotasPlato}) => {
   }</div>
 }
 
-const Platos = () => {
-  const [platos, setPlatos] = useState([])
+const Platos = ({todosLosPlatos, alAgregarAComanda}) => {
+  const [platos, setPlatos] = useState(todosLosPlatos)
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cargarPlatos = async () => setPlatos(await getPlatos())
@@ -51,10 +53,9 @@ const Platos = () => {
     platos.filter(p => p.seleccionado)
 
   const agregarAComanda = async () => {
-    console.log("Agregando platos...", platosSeleccionados().map(p => `${p.nombre} (Notas: ${p.notas})`))
-    await putCommanda(platosSeleccionados())
+    alAgregarAComanda(platosSeleccionados())
     setPlatos(platos.map(p => ({...p, seleccionado: false})))
-    alert("Platos agregados!")
+    navigate('/comanda')
   }
 
   const cambiarSeleccion = (plato) => {
@@ -80,7 +81,7 @@ const Platos = () => {
   return (
     platos.length === 0 ? "Cargando..." : <section className="home">
       <div className="content">
-        <Titulo texto="Platos"/>
+        <Titulo texto="Pedido"/>
         <ListaPlatos
           platos={platos}
           cambiarSeleccionPlato={cambiarSeleccionPlato}
