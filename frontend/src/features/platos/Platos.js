@@ -40,7 +40,7 @@ const ListaPlatos = ({platos, cambiarSeleccionPlato, cambiarNotasPlato}) => {
   }</div>
 }
 
-const Platos = ({todosLosPlatos, alAgregarAComanda, banner}) => {
+const Platos = ({todosLosPlatos, alAgregarAComanda, banner, error}) => {
   const [platos, setPlatos] = useState(todosLosPlatos)
   const navigate = useNavigate();
 
@@ -73,6 +73,10 @@ const Platos = ({todosLosPlatos, alAgregarAComanda, banner}) => {
   const cambiarNotasPlato = (idPlato, notas) => setPlatos(
     platos.map(p => p.id === idPlato ? cambiarNotas(p, notas) : p)
   )
+
+  if(error){
+    return <div className="error">HUBO UN ERROR AL CARGAR LOS PLATOS:{error}</div>
+  }
 
   return (
     <section className="home">
