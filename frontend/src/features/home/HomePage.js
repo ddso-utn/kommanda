@@ -91,60 +91,76 @@ const PLATOS = [
 ]
 
 
-
 const Titulo = ({texto}) => {
   return <h1 className="title">{texto}</h1>
 }
 
 const NavBar = ({logo, slogan}) => {
-  return <navbar className="nav">
+  return <nav className="nav">
     <div className="logo">{logo}</div>
     <div className="">{slogan}</div>
-  </navbar>
+  </nav>
 }
 
-const CardPlato = ({nombre, imagen, precio}) => {
-  const [seleccionado, setSeleccionado] = useState(false)
-
-  const cambiarSeleccion = () => {
-    setSeleccionado(!seleccionado)
-  }
-
-  return <div className={seleccionado ? "card selected" : "card"} onClick={cambiarSeleccion}>
+const CardPlato = ({nombre, imagen, precio, seleccionado, alSeleccionarPlato}) => {
+  return <div
+    className={`card ${seleccionado && "selected"}`}
+    onClick={alSeleccionarPlato}
+  >
     <h3>{nombre}</h3>
     <img src={imagen}/>
     <p className="price">${precio}</p>
   </div>
 }
 
-const ListaPlatos = ({}) => {
+const ListaPlatos = ({platos, platosSeleccionados, cambiarSeleccionPlato}) => {
   return <div className="platos">{
-    PLATOS.map((plato) => <CardPlato
+    platos.map((plato) => <CardPlato
+      key={plato.id}
       nombre={plato.nombre}
       imagen={plato.imagen}
       precio={plato.precio}
+      seleccionado={platosSeleccionados.includes(plato)}
+      alSeleccionarPlato={() => cambiarSeleccionPlato(plato)} // "onDishSelect"
     />)
   }</div>
 }
 
-const agregarAComanda = async (platos) => {
-  await putCommanda(platos)
-  alert(`Agregamos ${platos.length} platos!`)
-}
-
 const Home = () => {
+  const [todosLosPlatos] = useState(PLATOS)
+  const [platosSeleccionados, setPlatosSeleccionados] = useState([])
+
+  const agregarAComanda = async () => {
+    console.log("Agregando platos...", platosSeleccionados.map(p => p.nombre))
+    await putCommanda(platosSeleccionados)
+    setPlatosSeleccionados([])
+    alert("Platos agregados!")
+  }
+
+  const cambiarSeleccionPlato = (plato) => {
+    if (platosSeleccionados.includes(plato)) {
+      setPlatosSeleccionados(platosSeleccionados.filter(p => p !== plato))
+    } else {
+      setPlatosSeleccionados([...platosSeleccionados, plato])
+    }
+  }
+
   return (
     <section className="home">
       <NavBar logo="Kommanda" slogan="El sitio con +50 platos!"/>
       <div className="content">
         <Titulo texto="Platos"/>
-        <ListaPlatos/>
+        <ListaPlatos
+          platos={todosLosPlatos}
+          platosSeleccionados={platosSeleccionados}
+          cambiarSeleccionPlato={cambiarSeleccionPlato}
+        />
       </div>
-      <div class="actions">
-        <button onClick={() => agregarAComanda([])}>Agregar a comanda</button>
+      <div className="actions">
+        <button onClick={agregarAComanda}>Agregar a comanda</button>
       </div>
     </section>
   )
 };
 
-export default Home; 
+export default Home;
