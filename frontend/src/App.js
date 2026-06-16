@@ -1,7 +1,7 @@
 import Platos from './features/platos/Platos';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, useNavigate} from 'react-router';
-import { Routes, Route } from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 import Layout from './features/layout/Layout';
 import Bebidas from "./features/bebidas/bebidas";
 import {Comanda} from "./features/pedido/comanda";
@@ -12,14 +12,16 @@ import axios from "axios";
 function App() {
   const [platos, setPlatos] = useState([]);
   const [bebidas, setBebidas] = useState([]);
+  const [banner, setBanner] = useState('');
   const [comanda, setComanda] = useState({platos: [], bebidas: []});
 
   const cargarPlatos = async () => {
-
-      const platos = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos-base')
-        .then(r => r.data);
-      const imagenes = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/images').then(r => r.data);
-      setPlatos(platos.map( p => ({...p, imagen: imagenes[0][p.id]})));
+    const platos = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos-base')
+      .then(r => r.data);
+    const imagenes = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/images').then(r => r.data);
+    setPlatos(platos.map(p => ({...p, imagen: imagenes[0][p.id]})));
+    const banner = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/banner').then(r => r.data);
+    setBanner(banner[0].message)
   }
 
   useEffect(() => {
@@ -43,19 +45,20 @@ function App() {
 
 
   return (
-      <BrowserRouter>
+    <BrowserRouter>
       <Routes>
-      <Route path="/" element={<Layout cantPlatos={platos.length}  />} >
-        {<Route path="/platos" element={platos.length === 0 ? "Cargando..." :  <Platos
-          todosLosPlatos={platos}
-          alAgregarAComanda={agregarPlatosAComanda}
-        />}/>}
-        <Route path="/bebidas" element={bebidas.length === 0 ? "Cargando..." : <Bebidas
-          todasLasBebidas={bebidas}
-          alAgregarAComanda={agregarBebidasAComanda}
-        />} />
-        <Route path="/comanda" element={<Comanda comanda={comanda} />} />
-      </Route>
+        <Route path="/" element={<Layout cantPlatos={platos.length}/>}>
+          {<Route path="/platos" element={platos.length === 0 ? "Cargando..." : <Platos
+            banner={banner}
+            todosLosPlatos={platos}
+            alAgregarAComanda={agregarPlatosAComanda}
+          />}/>}
+          <Route path="/bebidas" element={bebidas.length === 0 ? "Cargando..." : <Bebidas
+            todasLasBebidas={bebidas}
+            alAgregarAComanda={agregarBebidasAComanda}
+          />}/>
+          <Route path="/comanda" element={<Comanda comanda={comanda}/>}/>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
