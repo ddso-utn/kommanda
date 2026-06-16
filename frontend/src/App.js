@@ -14,10 +14,15 @@ function App() {
   const [bebidas, setBebidas] = useState([]);
   const [comanda, setComanda] = useState({platos: [], bebidas: []});
 
+  const cargarPlatos = async () => {
+
+      const platos = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos-base')
+        .then(r => r.data);
+      const imagenes = await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/images').then(r => r.data);
+      setPlatos(platos.map( p => ({...p, imagen: imagenes[0][p.id]})));
+  }
+
   useEffect(() => {
-    const cargarPlatos = async () => setPlatos(
-      await axios.get('https://68486e64ec44b9f34940e355.mockapi.io/kommanda/platos').then(r => r.data)
-    )
     cargarPlatos()
   }, [])
 

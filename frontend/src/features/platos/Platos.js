@@ -40,7 +40,7 @@ const ListaPlatos = ({platos, cambiarSeleccionPlato, cambiarNotasPlato}) => {
   }</div>
 }
 
-const Platos = ({todosLosPlatos, alAgregarAComanda}) => {
+const Platos = ({todosLosPlatos, alAgregarAComanda, banner}) => {
   const [platos, setPlatos] = useState(todosLosPlatos)
   const navigate = useNavigate();
 
@@ -78,6 +78,7 @@ const Platos = ({todosLosPlatos, alAgregarAComanda}) => {
     <section className="home">
       <div className="content">
         <Titulo texto="Pedido"/>
+        <div>{banner}</div>
         <ListaPlatos
           platos={platos}
           cambiarSeleccionPlato={cambiarSeleccionPlato}
