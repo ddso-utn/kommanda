@@ -35,8 +35,8 @@ classDiagram
         +Compromiso compromiso
         +Modalidad modalidad
         +Boolean finalizado
-        +List~Colaboracion~ colaboraciones
-        +anotar(PersonaColaboradora) Colaboracion
+        +List~PersonaColaboradora~ colaboradoras
+        +anotar(PersonaColaboradora)
         +finalizar()
     }
 
@@ -85,10 +85,6 @@ classDiagram
         GITLAB
     }
 
-    class Colaboracion {
-        +PersonaColaboradora persona
-    }
-
     Colectivo "1" --> "*" Proyecto
     Colectivo --> "1" TipoColectivo
     Colectivo --> "0..1" Ubicacion
@@ -96,9 +92,8 @@ classDiagram
     Proyecto --> "1" Compromiso
     Proyecto --> "1" Modalidad
     Proyecto --> "*" Habilidad : requiere
-    Proyecto "1" --> "*" Colaboracion
+    Proyecto "1" --> "*" PersonaColaboradora : colaboradoras
     Compromiso --> Periodicidad
-    Colaboracion --> "1" PersonaColaboradora
     PersonaColaboradora --> "*" Habilidad
     PersonaColaboradora --> "0..1" CuentaGit
     CuentaGit --> Plataforma
@@ -106,9 +101,9 @@ classDiagram
 
 ## Notas de diseño
 
-- `Proyecto.anotar()` valida que el proyecto no esté finalizado y que la persona tenga al menos una de las habilidades requeridas; recién ahí crea la `Colaboracion`.
+- `Proyecto.anotar()` valida que el proyecto no esté finalizado y que la persona tenga al menos una de las habilidades requeridas; recién ahí la suma a `colaboradoras`.
 - `Proyecto.finalizar()` marca `finalizado = true`; a partir de ese momento `anotar()` falla.
 - `TipoColectivo` es un objeto y no un enum porque el enunciado anticipa que la clasificación se amplíe.
 - El anonimato de una `PersonaColaboradora` se deriva de si cargó `nombre`/`apellido`, sin necesidad de una jerarquía de clases. Hay otras formas válidas de modelarlo.
 - `Modalidad` se resuelve con dos booleanos (`rentada`, `permiteContratacion`). Es una decisión de modelado entre varias posibles igualmente válidas.
-- La `Colaboracion` todavía no lleva fecha; se agrega cuando haga falta el historial.
+- No modelamos una clase `Colaboracion`: hoy no tendría más que la persona anotada, así que sería un pasamanos sin comportamiento propio. La relación entre `Proyecto` y `PersonaColaboradora` alcanza. Cuando la colaboración tenga datos o reglas propias — fecha de anotación, estado, horas dedicadas — va a tener sentido darle su propia clase.
