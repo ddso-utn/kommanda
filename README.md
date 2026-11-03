@@ -47,6 +47,37 @@ La progresión detallada de cada clase está documentada en la carpeta [`clases/
 
 ---
 
+## Ejercicio: clase 2 de Frontend
+
+La clase 2 de Frontend (manejo de estado y API en React) está armada como un ejercicio para hacer por su cuenta. Son 12 pasos sobre Kommanda: en algunos se muestra cómo se resuelve y en otros les toca resolverlo a ustedes.
+
+### Con un asistente con IA
+
+1. Actualicen el repo con `git pull` en `main`, o clónenlo de nuevo.
+2. Abran su asistente con IA (Claude Code, Copilot, Codex, Cursor, Gemini…) en la carpeta principal del repo.
+3. Díganle algo como "quiero empezar el ejercicio de la clase 2 de Frontend".
+
+El asistente les va a crear una carpeta `ejercicio/` con el código de cada paso. **Trabajen siempre en esa carpeta**, no en la principal. Ahí corren `npm install` y `npm start` (dentro de `ejercicio/frontend`).
+
+Mientras trabajan:
+
+- Si se traban, pídanle una pista. Les va a dar pistas de a una, sin darles la solución.
+- Cuando terminen un paso, avísenle y les va a revisar el código.
+- Si de verdad no les sale, díganle "me rindo, quiero ver la solución" y se las muestra.
+- Al pasar de paso, guarda lo que hicieron en una rama `mi-solucion/paso-N`, así no pierden nada.
+
+El asistente no reemplaza al docente. Si les dice que algo no estaba previsto en las pistas, o que su solución es distinta y conviene chequearla, consúltenlo con el docente. Y la idea es que lo resuelvan ustedes: si le piden que les haga el código, se pierden lo que el ejercicio quiere enseñar.
+
+### Sin asistente
+
+Los enunciados están en [`clases/frontend-2/enunciados.md`](clases/frontend-2/enunciados.md). Cada paso dice desde qué rama se arranca y tiene un link a la explicación y a la rama resuelta.
+
+### Las explicaciones
+
+Usen o no un asistente, las explicaciones de cada paso están en [`clases/frontend-2/soluciones.md`](clases/frontend-2/soluciones.md). Si en algún momento las necesitan, las pueden leer directamente ahí. Lo más importante de cada paso está marcado como **Idea clave**.
+
+---
+
 ## Cómo correr el proyecto
 
 **Requisitos:** Node.js 22+, MongoDB corriendo en `localhost:27017`.
