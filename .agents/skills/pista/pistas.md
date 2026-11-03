@@ -2,7 +2,7 @@
 
 Cada paso tiene una lista de pistas, ordenadas de la más general a la más concreta. Cada pista dice para qué confusión sirve y qué decir o cómo guiar al alumno. También se pueden anotar los errores típicos del paso.
 
-Las explicaciones de cada paso no van acá: están en `clases/frontend-2/soluciones.md`. Ahí, cada paso que tiene una conclusión importante la marca como **Idea clave**. Las pistas llevan al alumno a descubrirla; cuando la descubra o termine el paso, reforzásela con lo que dice ese archivo.
+Las explicaciones de cada paso no van acá: están en `clases/frontend-2/soluciones.md`. Ahí, cada paso que tiene una conclusión importante la marca como **Idea clave**. Las pistas llevan al alumno a descubrirla; cuando la descubra o termine el paso, reforzásela citando textual lo que dice ese archivo.
 
 Formato de cada pista:
 
